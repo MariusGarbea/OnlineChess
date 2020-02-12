@@ -30,7 +30,6 @@ export default class App extends Component {
   }
 
   initializeBoard(fen, board){
-    fen = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2'; 
     let whitespace = fen.substr(0,fen.indexOf(' ')); 
     let rows = whitespace.split('/').slice(0,8); 
 
@@ -46,26 +45,19 @@ export default class App extends Component {
         }
       }
        rows[i] = newRow; 
+    })    
+    rows.forEach((row, i) => {
+      row = [...row]; 
+      row.forEach((col, j) => {
+        board[i][j] = col; 
+      })
     })
-
-    // Input new information onto the board 
-    let piece = {name: "", color: ""}; 
-    let names = {
-      "p": "pawn", 
-      "n": "knight", 
-      "b": "bishop", 
-      "r": "rook", 
-      "q": "queen", 
-      "k": "king"
-    }
-
-    
+    return board; 
  }
 
   render() {
     /* Initialize a new game of chess here */ 
     // this.validateMove('f3', this.ascii); 
-    // this.fenParser(); 
     return (
       <div>
         <p>Chess Board</p>
@@ -92,13 +84,4 @@ export default class App extends Component {
   }
 
 
-
-  /** Parse FEN notation in chess */
-  fenParser(move){
-    let dict = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h'}; 
-  
-
-  }
-
-  
 }
