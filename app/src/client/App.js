@@ -8,7 +8,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <p>Chess board</p>
+      <Board /> 
     )
   }
 
