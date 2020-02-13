@@ -10,26 +10,21 @@ export default class App extends Component {
     gameStatus: 'Player move', 
     board: null, 
   };
+  
 
-  componentDidMount() {
-    Array.matrix = function(numrows, numcols, initial){
-      var arr = [];
-      for (var i = 0; i < numrows; ++i){
-         var columns = [];
-         for (var j = 0; j < numcols; ++j){
-            columns[j] = initial;
-         }
-         arr[i] = columns;
+  createEmptyMatrix(numrows, numcols, initial){
+    var arr = [];
+    for (var i = 0; i < numrows; ++i){
+       var columns = [];
+       for (var j = 0; j < numcols; ++j){
+          columns[j] = initial;
        }
-       return arr;
-   }
-    this.board = Array.matrix(8,8,'X'); 
-    this.chess = new Chess(); 
-    this.board = this.initializeBoard(this.chess.fen(), this.board); 
-
+       arr[i] = columns;
+     }
+     return arr;
   }
 
-  initializeBoard(fen, board){
+  initializeBoard(fen){
     let whitespace = fen.substr(0,fen.indexOf(' ')); 
     let rows = whitespace.split('/').slice(0,8); 
 
@@ -45,19 +40,23 @@ export default class App extends Component {
         }
       }
        rows[i] = newRow; 
-    })    
+    });
+
     rows.forEach((row, i) => {
       row = [...row]; 
+      console.log(row); 
       row.forEach((col, j) => {
-        board[i][j] = col; 
+        this.board[i][j] = col; 
       })
     })
-    return board; 
+    console.log(this.board); 
  }
 
   render() {
-    /* Initialize a new game of chess here */ 
-    // this.validateMove('f3', this.ascii); 
+    this.chess = new Chess(); 
+    this.board = this.createEmptyMatrix(8,8,'X'); 
+    this.initializeBoard(this.chess.fen()); 
+    this.validateMove('f3', this.ascii); 
     return (
       <div>
         <p>Chess Board</p>
@@ -76,10 +75,10 @@ export default class App extends Component {
     } else if (this.chess.game_over()){
       this.gameStatus = 'Checkmate!'; 
     } else if (boardStr == this.ascii){
-      console.log(boardStr); 
       this.gameStatus = 'Invalid move!'; 
     } else {
       this.gameStatus = 'Valid move!'; 
+      this.initializeBoard(this.chess.fen()); 
     }
   }
 
