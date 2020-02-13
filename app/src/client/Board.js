@@ -65,6 +65,7 @@ export default class Board extends Component {
     });
   }
 
+	/** Generate JSX component of the board */
   tableBoard() {
 		let squares = []; 
 		for (let i = 0; i < 8; i++){
