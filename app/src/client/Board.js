@@ -65,40 +65,35 @@ export default class Board extends Component {
     });
   }
 
-	/** Generate JSX component of the board */
+  /** Generate JSX component of the board */
   tableBoard() {
-		let squares = []; 
-		for (let i = 0; i < 8; i++){
-			for (let j = 0; j < 8; j++){
-				let piece = this.board[i][j]; 
-				let square = ''; 
-				if (piece != 'X'){
-					square = <div class='black'>{piece}</div>
-				}
-				else{
-					square = <div class='black'></div>
-				}
-				squares.push(square); 
-			}
-		}
-		return squares; 
+    let squares = [];
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        let piece = this.board[i][j];
+        let square = "";
+        if (piece != "X") {
+          square = <div class="black">{piece}</div>;
+        } else {
+          square = <div class="black"></div>;
+        }
+        squares.push(square);
+      }
+    }
+    return squares;
   }
 
   render() {
-    // Initialize a new chess game. 
+    // Initialize a new chess game.
     this.chess = new Chess();
 
-    // Parse the initial FEN representation. 
+    // Parse the initial FEN representation.
     this.board = this.createEmptyMatrix(8, 8, "X");
-		this.initializeBoard(this.chess.fen());
-		let squares = this.tableBoard(); 
+    this.initializeBoard(this.chess.fen());
+    let squares = this.tableBoard();
 
     // Read in the move here
-    return (
-      <div class='chessboard'>
-				{squares.map(square => square)}
-      </div>
-    );
+    return <div class="chessboard">{squares.map(square => square)}</div>;
   }
 
   /**
