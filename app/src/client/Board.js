@@ -98,8 +98,8 @@ export default class Board extends Component {
 
   /**
    *
-   * @parama {*} move: a string representation of a move (e.g 'e4')
-   * @param {*} ascii: the ascii representation of a game
+   * @param {str} move: a string representation of a move (e.g 'e4')
+   * @param {str} ascii: the ascii representation of a game
    */
   validateMove(move, ascii) {
     this.chess.move(move);
