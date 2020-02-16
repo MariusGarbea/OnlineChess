@@ -3,6 +3,11 @@ const express = require('express');
 const os = require('os');
 const http = require('http');
 const io = require('socket.io');
+const manager = require('./SystemManager');
+
+// Setup system manager
+let systemManager = new manager.SystemManager();
+console.log('Connected players: ' + systemManager.getPlayers());
 
 // create app
 const app = express();
