@@ -49,6 +49,7 @@
   "jshintConfig": {
     "undef": true,
     "unused": true,
-    "esversion": 6
+    "esversion": 6,
+    "node": true
   }
 }

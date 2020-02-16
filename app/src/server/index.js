@@ -18,7 +18,7 @@ socket.on('connection', function(s) {
   console.log('a user connected');
   s.on('disconnect', function() {
     console.log('a user disconnected');
-  })
+  });
 });
 
 // setup listening on the backend
