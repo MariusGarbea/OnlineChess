@@ -22,21 +22,29 @@ yarn start (or npm start)
 
 ## Running Linter
 
-This project is using [JSHint](https://jshint.com/) as a static analysis tool.
+This project is using [ESLint](https://eslint.org/) as a static analysis tool.
 
 Make sure to install it using the following:
 
 ```bash
-npm install -g jshint
+npm install eslint --save-dev
+
+# or
+
+yarn add eslint --dev
 ```
+
+The configuration file we'll be using should be present in the repo.
+Check out `app/.eslintrc.json` to see the full configuration
 
 Then to perform static analysis of the JS files, run:
 
 ```bash
-jshint src/
+npx eslint src/
 ```
 
-within the app directory.
+within the app directory and the tool will produce a report about errors
+it finds.
 
 ## Documentation
 
