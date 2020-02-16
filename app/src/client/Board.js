@@ -3,12 +3,16 @@ import "./app.css";
 import Chess from "chess.js";
 
 export default class Board extends Component {
-  state = {
-    chess: null, // a chess object
-    ascii: null, // ascii string representation of the game
-    board: null, // matrix representation of the game
-    gameStatus: "" // string message that output game status
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      chess: null, // a chess object
+      ascii: null, // ascii string representation of the game
+      board: null, // matrix representation of the game
+      gameStatus: "", // string message that output game status
+    };
+  }
 
   /**
    * Create an empty chessboard filled with empty squares.
@@ -60,7 +64,7 @@ export default class Board extends Component {
       row = [...row];
       console.log(row);
       row.forEach((col, j) => {
-        this.board[i][j] = col;
+        this.state.board[i][j] = col;
       });
     });
   }
@@ -70,7 +74,7 @@ export default class Board extends Component {
     let squares = [];
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        let piece = this.board[i][j];
+        let piece = this.state.board[i][j];
         let square = "";
         if (piece != "X") {
           square = <div class="black">{piece}</div>;
@@ -85,11 +89,11 @@ export default class Board extends Component {
 
   render() {
     // Initialize a new chess game.
-    this.chess = new Chess();
+    this.state.chess = new Chess();
 
     // Parse the initial FEN representation.
-    this.board = this.createEmptyMatrix(8, 8, "X");
-    this.initializeBoard(this.chess.fen());
+    this.state.board = this.createEmptyMatrix(8, 8, "X");
+    this.initializeBoard(this.state.chess.fen());
     let squares = this.tableBoard();
 
     // Read in the move here
@@ -102,19 +106,19 @@ export default class Board extends Component {
    * @param {str} ascii: the ascii representation of a game
    */
   validateMove(move, ascii) {
-    this.chess.move(move);
-    this.ascii = this.chess.ascii();
-    if (this.chess.in_threefold_repetition()) {
-      this.gameStatus = "Drawn due to threefold repetition";
-    } else if (this.chess.insufficient_material()) {
-      this.gameStatus = "Drawn due to insufficient material";
-    } else if (this.chess.game_over()) {
-      this.gameStatus = "Checkmate!";
-    } else if (ascii == this.ascii) {
-      this.gameStatus = "Invalid move!";
+    this.state.chess.move(move);
+    this.state.ascii = this.state.chess.ascii();
+    if (this.state.chess.in_threefold_repetition()) {
+      this.state.gameStatus = "Drawn due to threefold repetition";
+    } else if (this.state.chess.insufficient_material()) {
+      this.state.gameStatus = "Drawn due to insufficient material";
+    } else if (this.state.chess.game_over()) {
+      this.state.gameStatus = "Checkmate!";
+    } else if (ascii == this.state.ascii) {
+      this.state.gameStatus = "Invalid move!";
     } else {
-      this.gameStatus = "Valid move!";
-      this.initializeBoard(this.chess.fen());
+      this.state.gameStatus = "Valid move!";
+      this.initializeBoard(this.state.chess.fen());
     }
   }
 }
