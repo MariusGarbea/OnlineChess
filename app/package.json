@@ -48,6 +48,7 @@
   },
   "jshintConfig": {
     "undef": true,
-    "unused": true
+    "unused": true,
+    "esversion": 6
   }
 }
