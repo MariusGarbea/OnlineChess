@@ -64,12 +64,30 @@ class SystemManager {
     * @return {boolean} Whether or not the request was agreed upon
     */
    requestMatch(p1, p2) {
-     // TODO:
-     // - Prompt player 2
-     // - Receive response of player
-     // - Return whether or not this match will be initiated
+     // Fail if p1 is not still connected
+     if (!this.connectedPlayers.has(p1)) {
+       return false;
+     }
 
-     return false;
+     // Fail if p2 is not still connected
+     if (!this.connectedPlayers.has(p2)) {
+       return false;
+     }
+
+     // Fail if p1 is already in a match
+     if (p1 in this.matchTable) {
+       return false;
+     }
+
+     // Fail if p2 is already in a match
+     if (p2 in this.matchTable) {
+       return false;
+     }
+
+     // TODO: Place code about requesting p2 here
+     let resp = false;
+
+     return resp;
    }
 
    /**
