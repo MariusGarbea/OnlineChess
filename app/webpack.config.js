@@ -35,8 +35,12 @@ module.exports = {
     port: 3000,
     open: true,
     proxy: {
-      '/api': 'http://localhost:8080',
-      '/socket': 'http://localhost:8000'
+      '/api': 'http://localhost:3100',
+      '/socket': 'http://localhost:3200/socket',
+      '/socket.io': {
+        target: 'http://localhost:3200/socket.io',
+        ws: true
+      }
     }
   },
   plugins: [
