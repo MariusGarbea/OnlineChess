@@ -13,9 +13,15 @@ export default class App extends Component {
     self.socket.on('connect', () => {
       console.log(`Connected. ID: ${self.socket.id}`);
     });
-    self.socket.emit('/register', {name: 'test'},
+
+    let name = prompt('Enter a username: ');
+    self.socket.emit('/register', {'name': name},
       function(resp) {
-        console.log(resp);
+        if (resp) {
+          alert('Name successfully registered!');
+        } else {
+          alert('Name registration failed :(');
+        }
       }
     );
   }

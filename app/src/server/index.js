@@ -19,20 +19,36 @@ app.get('/api/getUsername', (req, res) => res.send({
 
 // create server for sockets
 const sockets = {};
+const socketToName = {};
 io.on('connection', (socket) => {
   // Save the list of all connections to a variable
   sockets[socket.id] = socket;
   console.log('socket connected: ' + socket.id);
 
+  // Adding a name registration route
   socket.on('/register', function(data, callback) {
-    console.log('register: ' + data.name);
-    callback(systemManager.addPlayer(data.name));
+    console.log('Attempting to register: ' + data.name);
+
+    // Send a response back to the client
+    let success = systemManager.addPlayer(data.name);
+    callback(success);
+
+    // If registration was succesful, bind name to socket id
+    // so that we can free name when disconnected
+    if (success) {
+      socketToName[socket.id] = data.name;
+    }
+
     console.log('Connected players: ' + systemManager.getPlayers());
   });
 
   // When disconnect, delete the socket with the variable
   socket.on('disconnect', () => {
     console.log('socket diconnected: ' + socket.id);
+    if (socketToName[socket.id]) {
+      systemManager.removePlayer(socketToName[socket.id]);
+      delete socketToName[socket.id];
+    }
     delete sockets[socket.id];
   });
 });
