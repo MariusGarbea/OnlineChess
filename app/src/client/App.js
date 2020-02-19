@@ -14,6 +14,7 @@ export default class App extends Component {
       console.log(`Connected. ID: ${self.socket.id}`);
     });
 
+    // Example of registration of username
     let name = prompt('Enter a username: ');
     self.socket.emit('/register', {'name': name},
       function(resp) {
@@ -24,6 +25,12 @@ export default class App extends Component {
         }
       }
     );
+
+    // Example of getting list of players
+    self.socket.emit('/getPlayers', {}, function(resp) {
+      console.log(resp);
+    });
+
   }
 
   render() {

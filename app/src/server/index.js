@@ -42,6 +42,11 @@ io.on('connection', (socket) => {
     console.log('Connected players: ' + systemManager.getPlayers());
   });
 
+  // Route for getting list of current players
+  socket.on('/getPlayers', function(data, callback) {
+    callback(systemManager.getPlayers());
+  });
+
   // When disconnect, delete the socket with the variable
   socket.on('disconnect', () => {
     console.log('socket diconnected: ' + socket.id);
