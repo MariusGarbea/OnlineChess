@@ -9,7 +9,15 @@ export default class App extends Component {
   constructor() {
     super();
 
-    self.socket = io('/socket');
+    self.socket = io('http://localhost:3200');
+    self.socket.on('connect', () => {
+      console.log(`Connected. ID: ${self.socket.id}`);
+    });
+    self.socket.emit('/register', {name: 'test'},
+      function(resp) {
+        console.log(resp);
+      }
+    );
   }
 
   render() {
