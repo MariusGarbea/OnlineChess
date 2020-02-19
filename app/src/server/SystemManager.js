@@ -1,3 +1,18 @@
+const moveStatus = {
+    OK: 0,
+    BOUNDARY: 1,
+    OCCUPIED: 2,
+    INFEASIBLE: 3
+};
+
+const gameStates = {
+  NORMAL: 0,
+  CHECK: 1,
+  CHECKMATE: 2,
+  STALEMATE: 3
+};
+
+
 class SystemManager {
 
   constructor() {
@@ -46,7 +61,7 @@ class SystemManager {
     Initiates a match request between two players
     * @param {Player} p1: The first player (assumed to be initiating request)
     * @param {Player} p2: The second player
-    * @param {boolean} Whether or not the request was agreed upon
+    * @return {boolean} Whether or not the request was agreed upon
     */
    requestMatch(p1, p2) {
      // TODO:
@@ -61,7 +76,7 @@ class SystemManager {
     Accepts a match request between two players
     * @param {Player} p1: The first player
     * @param {Player} p2: The second player
-    * @param {boolean} Whether or not the request was agreed upon
+    * @return {boolean} Whether or not the request was agreed upon
     */
    acceptMatch(p1, p2) {
      // todo
@@ -73,14 +88,39 @@ class SystemManager {
     Rejects a match request between two players
     * @param {Player} p1: The first player
     * @param {Player} p2: The second player
-    * @param {boolean} Whether or not the request was agreed upon
+    * @return {boolean} Whether or not the request was agreed upon
     */
    rejectMatch(p1, p2) {
      // todo
      return false;
    }
+
+   /**
+    Validates whether a move is possible
+    * @param {Player} p: The player attempting to move
+    * @param {Move} m: The move that is being attempted
+    * @param {Piece} piece: The piece that is to be moved
+    * @return {int}: Returns an int correponding to moveStatus code
+    */
+   validateMove(p, m, piece) {
+
+     return moveStatus.INFEASIBLE;
+   }
+
+   /**
+   Applies a move
+   * @param {Player} p: The player attempting to move
+   * @param {Move} m: The move that is being attempted
+   * @param {Piece} piece: The piece that is to be moved
+   * @return {int}: Returns an int correponding to gameStates code
+    */
+   makeMove(p, m, piece) {
+     return gameStates.NORMAL;
+   }
 }
 
 module.exports = {
-  SystemManager: SystemManager
+  SystemManager: SystemManager,
+  GameStates: gameStates,
+  MoveStatus: moveStatus,
 };
