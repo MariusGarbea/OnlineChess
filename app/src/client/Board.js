@@ -76,10 +76,20 @@ export default class Board extends Component {
       for (let j = 0; j < 8; j++) {
         let piece = this.state.board[i][j];
         let square = "";
-        if (piece != "X") {
-          square = <div class="black">{piece}</div>;
+        if (piece != 'X'){
+          if ((i+j) % 2 == 0){
+            square = <div class="black">{piece}</div>;
+          }
+          else{
+            square = <div class="white">{piece}</div>;
+          }
         } else {
-          square = <div class="black"></div>;
+          if ((i+j) % 2 == 0){
+            square = <div class="black"></div>;
+          }
+          else{
+            square = <div class="white"></div>;
+          }
         }
         squares.push(square);
       }
