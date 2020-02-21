@@ -71,14 +71,20 @@ export default class Board extends Component {
 
   /** Generate JSX component of the board */
   tableBoard() {
+    let string_to_unicode = {
+      'K': '♔', 'Q': '♕', 'R': '♖', 
+      'B': '♗', 'N': '♘', 'P': '♙', 
+      'k': '♚', 'q': '♛', 'r': '♜', 
+      'b': '♝', 'n': '♞', 'p': '♟'
+    }
     let squares = [];
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        let piece = this.state.board[i][j];
+        let piece = string_to_unicode[this.state.board[i][j]];
         let square = "";
         if (piece != 'X'){
           if ((i+j) % 2 == 0){
-            square = <div class="black">{piece}</div>;
+            square = <span class="black">{piece}</span>;
           }
           else{
             square = <div class="white">{piece}</div>;

@@ -35,7 +35,10 @@ export default class App extends Component {
 
   render() {
     return (
-      <Board />
+      <div class="central">
+         <Board />
+      </div>
+     
     );
   }
 
