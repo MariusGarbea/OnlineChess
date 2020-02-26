@@ -1,5 +1,5 @@
 h1 {
-  color: black; 
+  color: black;
 }
 
 body {
@@ -7,13 +7,6 @@ body {
   margin: auto;
   background-color:#F8F9F9;
 }
-
-.central{
-  margin-top: 4%; 
-  margin-left: 27%;
-  position: absolute;
-}
-
 
 .chessboard {
   margin-left: 100px;
@@ -27,7 +20,7 @@ body {
   float: left;
   width: 70px;
   height: 70px;
-  background-color: #CACFD2; 
+  background-color: #CACFD2;
     font-size:50px;
   text-align:center;
   display: table-cell;
