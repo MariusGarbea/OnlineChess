@@ -38,6 +38,7 @@ export default class Board extends Component{
     return board;
   }
 
+
   /**
    * Creates list of Squares
    */
