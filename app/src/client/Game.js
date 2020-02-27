@@ -34,7 +34,7 @@ class Board extends Component{
         this.state = {
             board: this.setInitBoardPieces()
             // , currentPlayer: Player
-        }
+        };
     }
     /**
      * Creates Pieces for initial board
@@ -86,7 +86,7 @@ class Square extends Component {
     super(props);
     this.state = {
       piece: this.props.piece
-    }
+    };
   }
 
   render() {
@@ -105,7 +105,7 @@ class Piece extends Component{
         this.state = {
             unicodeLabel: 
             this.convertStringToUnicode(this.props.label)
-        }
+        };
     }
 
     convertStringToUnicode(label){
@@ -114,7 +114,7 @@ class Piece extends Component{
             'B': '♗', 'N': '♘', 'P': '♙', 
             'k': '♚', 'q': '♛', 'r': '♜', 
             'b': '♝', 'n': '♞', 'p': '♟'
-          }
+          };
         return string_to_unicode[label];
     }
 

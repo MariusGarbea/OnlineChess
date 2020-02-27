@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
   socket.on('/requestMatch', function(data, callback) {
     let p2 = data.playerName;
 
-    console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`)
+    console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`);
 
     result = systemManager.requestMatch(socketToName[socket.id], p2);
     if (result) {
@@ -66,13 +66,13 @@ io.on('connection', (socket) => {
   // Route for accepting a match request
   socket.on('/acceptMatch', function(data, callback) {
     let p2 = data.p2;
-    console.log(`Player "${socketToName[socket.id]}" has accepted Player "${p2}"'s request.`)
+    console.log(`Player "${socketToName[socket.id]}" has accepted Player "${p2}"'s request.`);
   });
 
   // Route for rejecting a match request
   socket.on('/rejectMatch', function(data, callback) {
     let p2 = data.p2;
-    console.log(`Player "${socketToName[socket.id]}" has rejected Player "${p2}"'s request.`)
+    console.log(`Player "${socketToName[socket.id]}" has rejected Player "${p2}"'s request.`);
   });
 
   // When disconnect, delete the socket with the variable
