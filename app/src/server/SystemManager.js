@@ -17,6 +17,7 @@ class SystemManager {
 
   constructor() {
     this.connectedPlayers = new Set();
+    this.busyPlayers = new Set();
     this.matchTable = {};
     this.gameTable = {};
   }
@@ -84,10 +85,21 @@ class SystemManager {
        return false;
      }
 
-     // TODO: Place code about requesting p2 here
-     let resp = false;
+     // Fail if p1 is busy
+     if (this.busyPlayers.has(p1)) {
+       return false;
+     }
 
-     return resp;
+     // Fail if p2 is busy
+     if (this.busyPlayers.has(p2)) {
+       return false;
+     }
+
+     // Mark both players as busy
+     this.busyPlayers.add(p1);
+     this.busyPlayers.add(p2);
+
+     return true;
    }
 
    /**

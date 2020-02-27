@@ -20,6 +20,7 @@ app.get('/api/getUsername', (req, res) => res.send({
 // create server for sockets
 const sockets = {};
 const socketToName = {};
+const nameToSocket = {};
 io.on('connection', (socket) => {
   // Save the list of all connections to a variable
   sockets[socket.id] = socket;
@@ -37,6 +38,7 @@ io.on('connection', (socket) => {
     // so that we can free name when disconnected
     if (success) {
       socketToName[socket.id] = data.name;
+      nameToSocket[data.name] = socket;
     }
 
     console.log('Connected players: ' + systemManager.getPlayers());
@@ -45,6 +47,32 @@ io.on('connection', (socket) => {
   // Route for getting list of current players
   socket.on('/getPlayers', function(data, callback) {
     callback(systemManager.getPlayers());
+  });
+
+  // Route for initiating a match request
+  socket.on('/requestMatch', function(data, callback) {
+    let p2 = data.playerName;
+
+    console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`)
+
+    result = systemManager.requestMatch(socketToName[socket.id], p2);
+    if (result) {
+      nameToSocket[p2].emit('test', {'playerName': socketToName[socket.id]});
+    } else {
+      console.log("Request has failed.");
+    }
+  });
+
+  // Route for accepting a match request
+  socket.on('/acceptMatch', function(data, callback) {
+    let p2 = data.p2;
+    console.log(`Player "${socketToName[socket.id]}" has accepted Player "${p2}"'s request.`)
+  });
+
+  // Route for rejecting a match request
+  socket.on('/rejectMatch', function(data, callback) {
+    let p2 = data.p2;
+    console.log(`Player "${socketToName[socket.id]}" has rejected Player "${p2}"'s request.`)
   });
 
   // When disconnect, delete the socket with the variable
