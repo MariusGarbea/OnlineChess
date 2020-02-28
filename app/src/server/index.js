@@ -8,7 +8,6 @@ const manager = require('./SystemManager');
 
 // Setup system manager
 let systemManager = new manager.SystemManager();
-console.log('Connected players: ' + systemManager.getPlayers());
 
 // create app
 const app = express();
@@ -24,11 +23,11 @@ const nameToSocket = {};
 io.on('connection', (socket) => {
   // Save the list of all connections to a variable
   sockets[socket.id] = socket;
-  console.log('socket connected: ' + socket.id);
+  console.log(`New socket connected: ${socket.id}`);
 
-  // Adding a name registration route
+  // Register name route
   socket.on('/register', function(data, callback) {
-    console.log('Attempting to register: ' + data.name);
+    console.log(`${socket.id} is requesting name: ${data.name}`);
 
     // Send a response back to the client
     let success = systemManager.addPlayer(data.name);
@@ -39,14 +38,16 @@ io.on('connection', (socket) => {
     if (success) {
       socketToName[socket.id] = data.name;
       nameToSocket[data.name] = socket;
-    }
 
-    console.log('Connected players: ' + systemManager.getPlayers());
+      console.log(`Success! ${socket.id} is bound to ${data.name}`);
+    }
   });
 
   // Route for getting list of current players
   socket.on('/getPlayers', function(data, callback) {
-    callback(systemManager.getPlayers());
+    let players = systemManager.getPlayers();
+    console.log(`${socket.id} is requesting the player list`);
+    callback(players);
   });
 
   // Route for initiating a match request
@@ -77,9 +78,10 @@ io.on('connection', (socket) => {
 
   // When disconnect, delete the socket with the variable
   socket.on('disconnect', () => {
-    console.log('socket diconnected: ' + socket.id);
+    console.log(`${socket.id} has diconnected.`);
     if (socketToName[socket.id]) {
       systemManager.removePlayer(socketToName[socket.id]);
+      console.log(`${socketToName[socket.id]} is no longer bound.`);
       delete socketToName[socket.id];
     }
     delete sockets[socket.id];
