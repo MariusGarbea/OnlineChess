@@ -41,6 +41,10 @@ export default class App extends Component {
       alert(`Player ${data.playerName} has accepted your game request!`);
     });
 
+    self.socket.on('update', (data) => {
+      console.log(data.fen);
+    });
+
     // Example of registration of username
     let name = null;
     while (name == null) {

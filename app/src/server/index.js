@@ -90,9 +90,19 @@ io.on('connection', (socket) => {
     nameToSocket[p2].emit('rejected', {'playerName': p1});
   });
 
-  // Route for validating moves
-  socket.on('/validateMove', function(data, callback) {
+  // Make move
+  socket.on('/move', function(data, callback) {
+    let player = socketToName[socket.id];
+    let move = data.move;
 
+    // Validate the move
+    let result = systemManager.validateMove(player, move);
+
+    if (result.status == manager.MoveStatus.OK) {
+      result['fen'] = result['chess'].fen();
+      socket.emit('update', result);
+      nameToSocket[result['other']].emit('update', result);
+    }
   });
 
   // When disconnect, delete the socket with the variable

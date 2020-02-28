@@ -2,9 +2,8 @@ const chess = require('chess.js');
 
 const moveStatus = {
     OK: 0,
-    BOUNDARY: 1,
-    OCCUPIED: 2,
-    INFEASIBLE: 3
+    INFEASIBLE: 1,
+    NOTPAIRED: 2
 };
 
 const gameStates = {
@@ -117,9 +116,10 @@ class SystemManager {
      // Match p2 to p1
      this.matchTable[p2] = p1;
 
+     // Initialize chess game
      this.gameTable[[p1,p2]] = new chess.Chess();
-     console.log(this.gameTable);
 
+     // Return game board
      return this.gameTable[[p1,p2]];
    }
 
@@ -142,23 +142,41 @@ class SystemManager {
     Validates whether a move is possible
     * @param {Player} p: The player attempting to move
     * @param {Move} m: The move that is being attempted
-    * @param {Piece} piece: The piece that is to be moved
     * @return {int}: Returns an int correponding to moveStatus code
     */
-   validateMove(p, m, piece) {
+   validateMove(p, m) {
+     console.log(`${p} -- ${m}`);
 
-     return moveStatus.INFEASIBLE;
-   }
+     // Verify that the player is actually in a game
+     let p2 = this.matchTable[p];
+     console.log(`${p} v. ${p2}`);
 
-   /**
-   Applies a move
-   * @param {Player} p: The player attempting to move
-   * @param {Move} m: The move that is being attempted
-   * @param {Piece} piece: The piece that is to be moved
-   * @return {int}: Returns an int correponding to gameStates code
-    */
-   makeMove(p, m, piece) {
-     return gameStates.NORMAL;
+     if (p2 != undefined) {
+        // Do move
+        let result = this.gameTable[[p,p2]].move(m);
+        console.log(result);
+
+        if (result != null) {
+          console.log(this.gameTable[[p,p2]].ascii());
+          return {
+            'chess': this.gameTable[[p,p2]],
+            'status': moveStatus.OK,
+            'cur': p,
+            'other': p2
+          };
+        } else {
+          return {
+            'status': moveStatus.INFEASIBLE,
+            'cur': p,
+            'other': p2
+          };
+        }
+     }
+
+      return {
+        'status': moveStatus.NOTPAIRED,
+        'cur': p
+      };
    }
 }
 
