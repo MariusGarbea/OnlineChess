@@ -73,12 +73,14 @@ io.on('connection', (socket) => {
   // Route for rejecting a match request
   socket.on('/rejectMatch', function(data, callback) {
     let p2 = data.p2;
-    console.log(`Player "${socketToName[socket.id]}" has rejected Player "${p2}"'s request.`);
+    let p1 = socketToName[socket.id];
+    console.log(`Player "${p1}" has rejected Player "${p2}"'s request.`);
+    systemManager.rejectMatch(p1, p2);
   });
 
   // Route for validating moves
   socket.on('/validateMove', function(data, callback) {
-    
+
   });
 
   // When disconnect, delete the socket with the variable

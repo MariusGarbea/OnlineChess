@@ -118,11 +118,15 @@ class SystemManager {
     Rejects a match request between two players
     * @param {Player} p1: The first player
     * @param {Player} p2: The second player
-    * @return {boolean} Whether or not the request was agreed upon
     */
    rejectMatch(p1, p2) {
-     // todo
-     return false;
+     if (this.busyPlayers.has(p1)) {
+       this.busyPlayers.delete(p1);
+     }
+
+     if (this.busyPlayers.has(p2)) {
+       this.busyPlayers.delete(p2);
+     }
    }
 
    /**
