@@ -76,6 +76,11 @@ io.on('connection', (socket) => {
     console.log(`Player "${socketToName[socket.id]}" has rejected Player "${p2}"'s request.`);
   });
 
+  // Route for validating moves
+  socket.on('/validateMove', function(data, callback) {
+    
+  });
+
   // When disconnect, delete the socket with the variable
   socket.on('disconnect', () => {
     console.log(`${socket.id} has diconnected.`);
