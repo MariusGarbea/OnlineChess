@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
 
     console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`);
 
-    result = systemManager.requestMatch(socketToName[socket.id], p2);
+    let result = systemManager.requestMatch(socketToName[socket.id], p2);
     if (result) {
       nameToSocket[p2].emit('receiveRequest', {'playerName': socketToName[socket.id]});
     } else {
@@ -69,6 +69,9 @@ io.on('connection', (socket) => {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
+
+    // Update system manager information
+    systemManager.acceptMatch(p1, p2);
 
     // Propogate response to other player
     nameToSocket[p2].emit('accepted', {'playerName': p1});

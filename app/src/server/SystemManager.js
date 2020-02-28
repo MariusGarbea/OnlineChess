@@ -1,3 +1,5 @@
+const chess = require('chess.js');
+
 const moveStatus = {
     OK: 0,
     BOUNDARY: 1,
@@ -109,9 +111,16 @@ class SystemManager {
     * @return {boolean} Whether or not the request was agreed upon
     */
    acceptMatch(p1, p2) {
-     // todo
+     // Match p1 to p2
+     this.matchTable[p1] = p2;
 
-     return true;
+     // Match p2 to p1
+     this.matchTable[p2] = p1;
+
+     this.gameTable[[p1,p2]] = new chess.Chess();
+     console.log(this.gameTable);
+
+     return this.gameTable[[p1,p2]];
    }
 
    /**
