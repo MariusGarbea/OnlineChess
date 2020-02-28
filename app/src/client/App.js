@@ -17,7 +17,7 @@ export default class App extends Component {
     });
 
     // Handler for getting a game request
-    self.socket.on('test', (data) => {
+    self.socket.on('receiveRequest', (data) => {
       let res = confirm(`Player "${data.playerName}" would like to player a game!`);
 
       if (res) {
@@ -31,6 +31,14 @@ export default class App extends Component {
           'p2': data.playerName
         });
       }
+    });
+
+    self.socket.on('rejected', (data) => {
+      alert(`Player ${data.playerName} has rejected your game request :(`);
+    });
+
+    self.socket.on('accepted', (data) => {
+      alert(`Player ${data.playerName} has accepted your game request!`);
     });
 
     // Example of registration of username

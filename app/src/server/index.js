@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 
     result = systemManager.requestMatch(socketToName[socket.id], p2);
     if (result) {
-      nameToSocket[p2].emit('test', {'playerName': socketToName[socket.id]});
+      nameToSocket[p2].emit('receiveRequest', {'playerName': socketToName[socket.id]});
     } else {
       console.log("Request has failed.");
     }
@@ -67,7 +67,11 @@ io.on('connection', (socket) => {
   // Route for accepting a match request
   socket.on('/acceptMatch', function(data, callback) {
     let p2 = data.p2;
-    console.log(`Player "${socketToName[socket.id]}" has accepted Player "${p2}"'s request.`);
+    let p1 = socketToName[socket.id];
+    console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
+
+    // Propogate response to other player
+    nameToSocket[p2].emit('accepted', {'playerName': p1});
   });
 
   // Route for rejecting a match request
@@ -75,7 +79,12 @@ io.on('connection', (socket) => {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has rejected Player "${p2}"'s request.`);
+
+    // Update system manager information
     systemManager.rejectMatch(p1, p2);
+
+    // Propogate response to other player
+    nameToSocket[p2].emit('rejected', {'playerName': p1});
   });
 
   // Route for validating moves
