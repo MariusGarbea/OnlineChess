@@ -124,15 +124,23 @@ class Piece extends Component{
 }
 
 // TODO
-// class Move extends Component {
-//   constructor(props){
-//     super(props);
-//     this.state = {
-//       fromSquare = Square,
-//       toSquare = Square
-//     }
-//   }
-// }
+class Move extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      fromSquare: Square,
+      toSquare: Square
+    }
+  }
+
+  getFromSquare(){
+      return this.state.fromSquare;
+  }
+
+  getToSquare(){
+      return this.state.toSquare;
+  }
+}
 
 
 
