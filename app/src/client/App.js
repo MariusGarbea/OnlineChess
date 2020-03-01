@@ -12,7 +12,7 @@ export default class App extends Component {
 
     this.state = {
       name: '',
-      players: []
+      players: ["Marius", "Hunter", "Minh"]
     }
 
   }
@@ -29,7 +29,7 @@ export default class App extends Component {
         if (resp) {
           alert('Name successfully registered!');
         } else {
-          alert('Name registration failed :(');
+          alert('Name registration failed. Name already exists.');
         }
       }
     );
