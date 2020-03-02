@@ -1,5 +1,30 @@
-h1 {
-  color: black; 
+@import url('https://fonts.googleapis.com/css?family=Roboto:300&display=swap');
+
+
+.column {
+  float: left;
+  font-family: 'Roboto'; 
+}
+.green{
+  color: #117A65; 
+  padding-left: 20px;
+}
+
+hr{
+  color: #BDC3C7 ; 
+}
+
+p{
+  text-align: left;
+  margin-left: -20px;
+  font-family: 'Roboto', sans-serif; 
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 body {
@@ -8,15 +33,16 @@ body {
   background-color:#F8F9F9;
 }
 
+
+
 .central{
   margin-top: 4%; 
-  margin-left: 27%;
+  margin-left: 13%;
   position: absolute;
 }
 
-
 .chessboard {
-  margin-left: 100px;
+  margin-left: 50px;
   width: 560px;
   height: 560px;
   margin: 20px;
@@ -42,4 +68,22 @@ body {
   text-align:center;
   display: table-cell;
   vertical-align:middle;
+}
+
+.left{
+  border: 10px solid #333;
+  background-color: white;
+  position: fixed; 
+  top: 50px; 
+  bottom: 70px; 
+  right: 120px;
+  width: 400px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding: 2%; 
+}
+
+.title{
+  color: #333; 
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
 }

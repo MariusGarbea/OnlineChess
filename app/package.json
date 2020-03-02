@@ -13,6 +13,7 @@
   "author": "Sandeep Raveesh",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "babel-polyfill": "^6.26.0",
     "chess.js": "^0.10.2",
     "express": "^4.16.3",
