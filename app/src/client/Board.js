@@ -13,6 +13,7 @@ export default class Board extends Component {
       squares: null, 
       gameStatus: "", // string message that output game status
       history: [], 
+      currentPlayer: 'white', 
     };
   }
 
@@ -70,9 +71,13 @@ export default class Board extends Component {
     });
   }
 
-  /* This function is activated when a person click on a square */ 
-  getMove(piece,i,j){
-    console.log(this.state.history); 
+  /**
+   * This function allows move a piece from one square to another 
+   * @param {string} piece: name of the piece that moves 
+   * @param {*} i the row number 
+   * @param {*} j the column number 
+   */
+  getMove(piece, i,j){
     let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; 
     let row = ['8', '7', '6', '5', '4', '3', '2', '1']; 
     let move = col[j] + row[i]; 
@@ -80,11 +85,18 @@ export default class Board extends Component {
     if (this.state.history.length == 2) {
       let move1 = this.state.history[0]; 
       let move2 = this.state.history[1]; 
-      this.state.chess.move({ from: move1, to: move2})  
-      this.state.history = []; 
-      this.forceUpdate(); 
+      let move_object = this.state.chess.move({ from: move1, to: move2}); 
+      if (move_object != null){
+        this.forceUpdate(); 
+        this.state.history = [];  
+        this.currentPlayer = move_object.color; 
+        console.log(this.currentPlayer); 
+        this.state.history = []; 
+      } else{ 
+        console.log('invalid!'); 
+        this.state.history = []; 
+      }
     }
-
   }
 
   /** Generate JSX component of the board */
@@ -110,10 +122,10 @@ export default class Board extends Component {
           }
         } else {
           if ((i+j) % 2 == 0){
-            square = <div onClick={(e) => this.getMove(e, i, j)} class="black"></div>;
+            square = <div onClick={(e) => this.getMove('', i, j)} class="black"></div>;
           }
           else{
-            square = <div onClick={(e) => this.getMove(e, i, j)} class="white"></div>;
+            square =  <div onClick={(e) => this.getMove('', i, j)} class="white"></div>;
           }
         }
         squares.push(square);
