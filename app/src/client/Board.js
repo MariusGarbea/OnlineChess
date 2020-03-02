@@ -7,10 +7,12 @@ export default class Board extends Component {
     super(props);
 
     this.state = {
-      chess: null, // a chess object
+      chess: new Chess(), // a chess object
       ascii: null, // ascii string representation of the game
       board: null, // matrix representation of the game
+      squares: null, 
       gameStatus: "", // string message that output game status
+      history: [], 
     };
   }
 
@@ -62,11 +64,27 @@ export default class Board extends Component {
     // For each row, return the board
     rows.forEach((row, i) => {
       row = [...row];
-      console.log(row);
       row.forEach((col, j) => {
         this.state.board[i][j] = col;
       });
     });
+  }
+
+  /* This function is activated when a person click on a square */ 
+  getMove(piece,i,j){
+    console.log(this.state.history); 
+    let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; 
+    let row = ['8', '7', '6', '5', '4', '3', '2', '1']; 
+    let move = col[j] + row[i]; 
+    this.state.history.push(move);   
+    if (this.state.history.length == 2) {
+      let move1 = this.state.history[0]; 
+      let move2 = this.state.history[1]; 
+      this.state.chess.move({ from: move1, to: move2})  
+      this.state.history = []; 
+      this.forceUpdate(); 
+    }
+
   }
 
   /** Generate JSX component of the board */
@@ -80,21 +98,22 @@ export default class Board extends Component {
     let squares = [];
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        let piece = string_to_unicode[this.state.board[i][j]];
+        let piece = this.state.board[i][j]; 
+        let img = string_to_unicode[piece];
         let square = "";
         if (piece != 'X'){
           if ((i+j) % 2 == 0){
-            square = <span class="black">{piece}</span>;
+            square = <span onClick={(e) => this.getMove(piece, i, j)} class="black">{img}</span>;
           }
           else{
-            square = <div class="white">{piece}</div>;
+            square = <div onClick={(e) => this.getMove(piece, i, j)} class="white">{img}</div>;
           }
         } else {
           if ((i+j) % 2 == 0){
-            square = <div class="black"></div>;
+            square = <div onClick={(e) => this.getMove(e, i, j)} class="black"></div>;
           }
           else{
-            square = <div class="white"></div>;
+            square = <div onClick={(e) => this.getMove(e, i, j)} class="white"></div>;
           }
         }
         squares.push(square);
@@ -104,37 +123,14 @@ export default class Board extends Component {
   }
 
   render() {
-    // Initialize a new chess game.
-    this.state.chess = new Chess();
-
     // Parse the initial FEN representation.
     this.state.board = this.createEmptyMatrix(8, 8, "X");
     this.initializeBoard(this.state.chess.fen());
-    let squares = this.tableBoard();
 
-    // Read in the move here
-    return <div class="chessboard">{squares.map(square => square)}</div>;
+    this.state.squares = this.tableBoard();   
+    return <div class="chessboard">
+      {this.state.squares.map(square => square)}
+      </div>;
   }
 
-  /**
-   *
-   * @param {str} move: a string representation of a move (e.g 'e4')
-   * @param {str} ascii: the ascii representation of a game
-   */
-  validateMove(move, ascii) {
-    this.state.chess.move(move);
-    this.state.ascii = this.state.chess.ascii();
-    if (this.state.chess.in_threefold_repetition()) {
-      this.state.gameStatus = "Drawn due to threefold repetition";
-    } else if (this.state.chess.insufficient_material()) {
-      this.state.gameStatus = "Drawn due to insufficient material";
-    } else if (this.state.chess.game_over()) {
-      this.state.gameStatus = "Checkmate!";
-    } else if (ascii == this.state.ascii) {
-      this.state.gameStatus = "Invalid move!";
-    } else {
-      this.state.gameStatus = "Valid move!";
-      this.initializeBoard(this.state.chess.fen());
-    }
-  }
 }
