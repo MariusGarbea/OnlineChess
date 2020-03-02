@@ -1,136 +1,136 @@
 import React, { Component } from "react";
 import "./app.css";
-import Piece from "./Piece.js"
-import Square from "./Square.js"
+import Chess from "chess.js";
 
+export default class Board extends Component {
+  constructor(props) {
+    super(props);
 
-export default class Board extends Component{
-  constructor(props){
-      super(props);
-      this.state = {
-          board: this.setInitBoardPieces(),
-          // bool checking 2 clicked squares for movement
-          squareOneFound: false,
-          squareTwoFound: false,
-          // var to track square piece & position for movement
-          fromSquarePiece: null,
-          toSquarePiece: null,
-          fromSquareXPos: 1,
-          toSquareXPos: 1,
-          fromSquareYPos: 1,
-          toSquareYPos: 1
-          // , currentPlayer: Player
-      };
-  }
-  
-  /**
-   * Creates Pieces for initial board
-   * @return {list} board: 2d list with 32 pieces
-   */
-  setInitBoardPieces(){
-      // lists for player1 pieces & player2 pieces
-      let p1Pieces = [['r','n','b','k','q','b','n','r'],['p','p','p','p','p','p','p','p']];
-      let p2Pieces = [['P','P','P','P','P','P','P','P'],['R','N','B','Q','K','B','N','R']];
-      let board = [];
-
-      // create piece with respective label and store into board
-      for(let i = 0; i < 8; i++){
-          let columns = [];
-          for(let j = 0; j < 8; j++){
-              if (i < 2) {
-                  columns[j] = <Piece label={p1Pieces[i][j]}></Piece>;
-              }
-              if (i > 5){
-                  columns[j] = <Piece label={p2Pieces[i-6][j]}></Piece>;
-              } 
-              if (i > 1 && i < 6){
-                  columns[j] = null;
-              }
-          }
-          board[i] = columns;
-      }
-      return board;
+    this.state = {
+      chess: new Chess(), // a chess object
+      ascii: null, // ascii string representation of the game
+      board: null, // matrix representation of the game
+      squares: null, 
+      gameStatus: "", // string message that output game status
+      history: [], 
+    };
   }
 
   /**
-   * Creates list of Squares
+   * Create an empty chessboard filled with empty squares.
+   * @param {number} numrows: number of rows for a matrix
+   * @param {numer} numcols: number of rows for a matrix
+   * @param {any} initial: default value to fill in the matrix
+   * @return {array} arr: a 8 x 8 matrix that represent the chess board
    */
-  renderBoard(){
-      let squares = [];
-      for (let i = 0; i < 8; i++) {
-          for (let j = 0; j < 8; j++) {
-              let square = <Square 
-                  onClick={() => this.saveSquare(i, j, this.state.board[i][j])}
-                  xPos={i} yPos={j} piece={this.state.board[i][j]}></Square>; 
-              squares.push(square);
+  createEmptyMatrix(numrows, numcols, initial) {
+    var arr = [];
+    for (var i = 0; i < numrows; ++i) {
+      var columns = [];
+      for (var j = 0; j < numcols; ++j) {
+        columns[j] = initial;
+      }
+      arr[i] = columns;
+    }
+    return arr;
+  }
+
+  /**
+   * Converts a FEN notation to a 2D Board matrix
+   * @param {string} fen: the fen representation of chess
+   * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+   */
+  initializeBoard(fen) {
+    // Take only the first part of the FEN representation
+    // E.g: rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR
+    let whitespace = fen.substr(0, fen.indexOf(" "));
+    let rows = whitespace.split("/").slice(0, 8);
+
+    // For each row of the FEN representation, parse empty spaces
+    // and convert them to 'X' to represent the empty space
+    rows.forEach((row, i) => {
+      let newRow = "";
+      for (let i = 0; i < row.length; i++) {
+        if (isNaN(row[i])) {
+          newRow += row[i];
+        } else {
+          let empty = "X".repeat(parseInt(row[i]));
+          newRow += empty;
+        }
+      }
+      rows[i] = newRow;
+    });
+
+    // For each row, return the board
+    rows.forEach((row, i) => {
+      row = [...row];
+      row.forEach((col, j) => {
+        this.state.board[i][j] = col;
+      });
+    });
+  }
+
+  /* This function is activated when a person click on a square */ 
+  getMove(piece,i,j){
+    console.log(this.state.history); 
+    let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; 
+    let row = ['8', '7', '6', '5', '4', '3', '2', '1']; 
+    let move = col[j] + row[i]; 
+    this.state.history.push(move);   
+    if (this.state.history.length == 2) {
+      let move1 = this.state.history[0]; 
+      let move2 = this.state.history[1]; 
+      this.state.chess.move({ from: move1, to: move2})  
+      this.state.history = []; 
+      this.forceUpdate(); 
+    }
+
+  }
+
+  /** Generate JSX component of the board */
+  tableBoard() {
+    let string_to_unicode = {
+      'K': '♔', 'Q': '♕', 'R': '♖', 
+      'B': '♗', 'N': '♘', 'P': '♙', 
+      'k': '♚', 'q': '♛', 'r': '♜', 
+      'b': '♝', 'n': '♞', 'p': '♟'
+    }
+    let squares = [];
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        let piece = this.state.board[i][j]; 
+        let img = string_to_unicode[piece];
+        let square = "";
+        if (piece != 'X'){
+          if ((i+j) % 2 == 0){
+            square = <span onClick={(e) => this.getMove(piece, i, j)} class="black">{img}</span>;
           }
+          else{
+            square = <div onClick={(e) => this.getMove(piece, i, j)} class="white">{img}</div>;
+          }
+        } else {
+          if ((i+j) % 2 == 0){
+            square = <div onClick={(e) => this.getMove(e, i, j)} class="black"></div>;
+          }
+          else{
+            square = <div onClick={(e) => this.getMove(e, i, j)} class="white"></div>;
+          }
+        }
+        squares.push(square);
       }
-      return squares;
+    }
+    return squares;
   }
 
-  // Registers square click and saves square location & piece on square
-  saveSquare(i, j, myPiece){
-      // if square 1 and sqaure 2 have not been found 
-      if(!this.state.squareOneFound && !this.state.squareTwoFound){
-          // save piece into moveSqaureOne and set square 1 found to true
-          this.setState({
-              fromSquarePiece: myPiece,
-              fromSquareXPos: i,
-              fromSquareYPos: j,
-              squareOneFound: true
-          }, function () {
-              this.processMove();
-          });
-      }
-      // if sqaure 1 has been found but square 2 has not been found
-      if(this.state.squareOneFound && !this.state.squareTwoFound){
-          // save piece into toSquarePiece
-          this.setState({
-              toSquarePiece: myPiece,
-              toSquareXPos: i,
-              toSquareYPos: j,
-              squareTwoFound: true
-          }, function () {
-              this.processMove();
-          });
-      }
+  render() {
+    // Parse the initial FEN representation.
+    this.state.board = this.createEmptyMatrix(8, 8, "X");
+    this.initializeBoard(this.state.chess.fen());
+
+    this.state.squares = this.tableBoard();   
+    return <div class="chessboard">
+      {this.state.squares.map(square => square)}
+      </div>;
   }
 
-  // Conducts move & changes board state if move is valid
-  processMove(){
-      // if two sqaures have been selected - reset squares
-      if(this.state.squareOneFound && this.state.squareTwoFound){
-          this.setState({
-              squareOneFound: false,
-              squareTwoFound: false
-          });
-      }
-      // MOVE VALIDATION
-      // if move is valid & if 2 different squares have been selected
-      if( (this.state.squareOneFound && this.state.squareTwoFound) 
-      && !((this.state.toSquareXPos == this.state.fromSquareXPos) 
-          && (this.state.toSquareYPos == this.state.fromSquareYPos)) ){
-
-          let copyValues = this.state.board.slice();
-          // set to square = piece in from square
-          copyValues[this.state.toSquareXPos][this.state.toSquareYPos] = null;
-          copyValues[this.state.toSquareXPos][this.state.toSquareYPos] = 
-              this.state.fromSquarePiece;
-          console.log(copyValues);
-          // set from square = null
-          copyValues[this.state.fromSquareXPos][this.state.fromSquareYPos] = null;
-          // save state for board
-          this.setState({
-              board: copyValues,
-          });
-      }
-  }
-  // TODO
-  tryPromote(){
-
-  }
-
-  render(){
-      return (<div className="chessboard">{this.renderBoard()}</div>);
-  }
 }

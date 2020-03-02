@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 
 import './app.css';
-import Game from './Game';
 import Board from './Board';
 
 export default class App extends Component {
@@ -75,7 +74,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="central">
-         <Game/>
+         <Board />
       </div>
 
     );
