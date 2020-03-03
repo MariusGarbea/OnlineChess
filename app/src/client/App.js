@@ -101,7 +101,7 @@ export default class App extends Component {
         }
       })
       .catch((err) => {
-        console.log('ERROR');
+        console.log(err);
       });
   }
 
