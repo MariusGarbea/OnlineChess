@@ -7,7 +7,7 @@ export default class Board extends Component {
     super(props);
 
     this.state = {
-      chess: new Chess(), // a chess object
+      chess: null, // a chess object
       ascii: null, // ascii string representation of the game
       board: null, // matrix representation of the game
       squares: null,
@@ -136,15 +136,15 @@ export default class Board extends Component {
 
   render() {
     const app = this.props.app;
-    console.log(app);
 
     // Parse the initial FEN representation.
     this.state.board = this.createEmptyMatrix(8, 8, "X");
-    this.initializeBoard(this.state.chess.fen());
+
+    if (app.state.game)
+      this.initializeBoard(app.state.game.fen);
 
     this.state.squares = this.tableBoard();
     return <div class="chessboard">
-      <p>{app.state.username}</p>
       {this.state.squares.map(square => square)}
       </div>;
   }
