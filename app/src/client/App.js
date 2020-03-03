@@ -48,6 +48,10 @@ export default class App extends Component {
     // Receives game updates
     this.socket.on('update', (data) => {
       console.log(data);
+      let w = data.w;
+      let b = data.b;
+      let me = w == this.username ? 'w' : 'b';
+      if (me == data.current) console.log('Your turn is now!');
     });
 
     this.username = null;

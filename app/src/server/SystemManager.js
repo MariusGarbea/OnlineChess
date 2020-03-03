@@ -125,8 +125,6 @@ class SystemManager {
      };
      this.gameTable[[p1,p2]].fen = this.gameTable[[p1,p2]].game.fen();
 
-     console.log(this.gameTable[[p1,p2]]);
-
      // Return game board
      return this.gameTable[[p1,p2]];
    }
