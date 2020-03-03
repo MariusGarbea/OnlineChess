@@ -91,12 +91,24 @@ export default class App extends Component {
       });
   }
 
+  myTurn() {
+    if (this.state.game) {
+      let w = this.state.game.w;
+      let b = this.state.game.b;
+      let me = w == this.state.username ? 'w' : 'b';
+      if (me == this.state.game.current)
+        return <p>It's your turn!</p>;
+    }
+    return <p>Waiting on opponent...</p>;
+  }
+
   render() {
     return (
       <div className="central">
-         <Board app={this} />
+        <h2>Welcome {this.state.username}!</h2>
+        {this.myTurn()}
+        <Board app={this} />
       </div>
-
     );
   }
 
