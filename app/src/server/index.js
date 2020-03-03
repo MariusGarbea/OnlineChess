@@ -12,11 +12,13 @@ let systemManager = new manager.SystemManager();
 // create app
 const app = express();
 app.use(express.static('dist'));
+
+// Handle for registering a username
 app.get('/api/registerUsername', (req, res) => {
   res.json({result: systemManager.addPlayer(req.query.name)});
 });
 
-/*// create server for sockets
+// create server for sockets
 const sockets = {};
 const socketToName = {};
 const nameToSocket = {};
@@ -25,24 +27,26 @@ io.on('connection', (socket) => {
   sockets[socket.id] = socket;
   console.log(`New socket connected: ${socket.id}`);
 
-  // Register name route
-  socket.on('/register', function(data, callback) {
-    console.log(`${socket.id} is requesting name: ${data.name}`);
-
-    // Send a response back to the client
-    let success = systemManager.addPlayer(data.name);
-    callback(success);
-
-    // If registration was succesful, bind name to socket id
-    // so that we can free name when disconnected
-    if (success) {
-      socketToName[socket.id] = data.name;
-      nameToSocket[data.name] = socket;
-
-      console.log(`Success! ${socket.id} is bound to ${data.name}`);
-    }
+  // Handles the binding of sockets to names and name to sockets
+  socket.on('bind', (data, callback) => {
+    systemManager.addPlayer(data.name);
+    nameToSocket[data.name] = socket;
+    socketToName[socket.id] = data.name;
+    console.log(`Socket ID ${socket.id} is bound to ${data.name}`);
   });
 
+  // Handles socket disconnects
+  socket.on('disconnect', () => {
+    console.log(`${socket.id} has diconnected.`);
+    if (socketToName[socket.id]) {
+      systemManager.removePlayer(socketToName[socket.id]);
+      console.log(`${socketToName[socket.id]} is no longer bound.`);
+      delete socketToName[socket.id];
+    }
+    delete sockets[socket.id];
+  });
+
+  /*
   // Route for getting list of current players
   socket.on('/getPlayers', function(data, callback) {
     let players = systemManager.getPlayers();
@@ -104,18 +108,8 @@ io.on('connection', (socket) => {
       nameToSocket[result['other']].emit('update', result);
     }
   });
-
-  // When disconnect, delete the socket with the variable
-  socket.on('disconnect', () => {
-    console.log(`${socket.id} has diconnected.`);
-    if (socketToName[socket.id]) {
-      systemManager.removePlayer(socketToName[socket.id]);
-      console.log(`${socketToName[socket.id]} is no longer bound.`);
-      delete socketToName[socket.id];
-    }
-    delete sockets[socket.id];
-  });
-});*/
+*/
+});
 
 // setup listening on the backend
 app.listen(process.env.PORT || 3100, () => console.log(`Listening on port ${process.env.PORT || 3100}!`));

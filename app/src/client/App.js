@@ -9,8 +9,17 @@ export default class App extends Component {
   constructor() {
     super();
 
+    this.socket = io('http://localhost:3200');
+    this.socket.on('connect', () => {
+      if (this.username) {
+        this.socket.emit('bind', {name: this.username});
+      }
+    });
+
     this.username = null;
     this.registerUsername();
+
+
 
     /*
     // Connects app to sockets on the backend
@@ -85,6 +94,7 @@ export default class App extends Component {
         if (data['result']) {
           alert('Name successfully registered!');
           this.username = name;
+          this.socket.emit('bind', {name: this.username});
         } else {
           alert('Name is already taken :( Try again');
           this.registerUsername();
