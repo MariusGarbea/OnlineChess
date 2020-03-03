@@ -117,7 +117,15 @@ class SystemManager {
      this.matchTable[p2] = p1;
 
      // Initialize chess game
-     this.gameTable[[p1,p2]] = new chess.Chess();
+     this.gameTable[[p1,p2]] = {
+       w: p2,
+       b: p1,
+       current: 'w',
+       game: new chess.Chess()
+     };
+     this.gameTable[[p1,p2]].fen = this.gameTable[[p1,p2]].game.fen();
+
+     console.log(this.gameTable[[p1,p2]]);
 
      // Return game board
      return this.gameTable[[p1,p2]];
