@@ -9,26 +9,31 @@ export default class App extends Component {
   constructor() {
     super();
 
-    this.socket = io('http://localhost:3200');
+    // Set the inital state of the system
+    this.state = {
+      socket: io('http://localhost:3200'),
+      username: null,
+      game: null
+    }
 
     // What to do when this socket connects
-    this.socket.on('connect', () => {
-      if (this.username) {
-        this.socket.emit('bind', {name: this.username});
+    this.state.socket.on('connect', () => {
+      if (this.state.username) {
+        this.state.socket.emit('bind', {name: this.state.username});
       }
     });
 
     // What to do when this socket receives a play request
-    this.socket.on('receiveRequest', (data) => {
+    this.state.socket.on('receiveRequest', (data) => {
       let res = confirm(`Player "${data.playerName}" would like to player a game!`);
 
       if (res) {
-        self.socket.emit('acceptMatch', {
+        this.state.socket.emit('acceptMatch', {
           'p1': self.name,
           'p2': data.playerName
         });
       } else {
-        self.socket.emit('rejectMatch', {
+        this.state.socket.emit('rejectMatch', {
           'p1': self.name,
           'p2': data.playerName
         });
@@ -36,29 +41,30 @@ export default class App extends Component {
     });
 
     // Alerts the player that their match was rejected
-    this.socket.on('rejected', (data) => {
+    this.state.socket.on('rejected', (data) => {
       alert(`Player ${data.playerName} has rejected your game request :(`);
     });
 
     // Alerts the player that their match was accepted
-    this.socket.on('accepted', (data) => {
+    this.state.socket.on('accepted', (data) => {
       alert(`Player ${data.playerName} has accepted your game request!`);
     });
 
     // Receives game updates
-    this.socket.on('update', (data) => {
-      console.log(data);
+    this.state.socket.on('update', (data) => {
+      this.setState({
+        game: data
+      });
       let w = data.w;
       let b = data.b;
-      let me = w == this.username ? 'w' : 'b';
+      let me = w == this.state.username ? 'w' : 'b';
       if (me == data.current) console.log('Your turn is now!');
     });
 
-    this.username = null;
     this.registerUsername();
 
     // For testing purposes and should probably be removed
-    self.socket = this.socket;
+    self.socket = this.state.socket;
   }
 
   /**
@@ -71,8 +77,10 @@ export default class App extends Component {
       .then((data) => {
         if (data['result']) {
           alert('Name successfully registered!');
-          this.username = name;
-          this.socket.emit('bind', {name: this.username});
+          this.setState({
+            username: name
+          });
+          this.state.socket.emit('bind', {name: this.state.username});
         } else {
           alert('Name is already taken :( Try again');
           this.registerUsername();
@@ -86,7 +94,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="central">
-         <Board />
+         <Board app={this} />
       </div>
 
     );
