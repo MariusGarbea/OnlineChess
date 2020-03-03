@@ -67,10 +67,14 @@ io.on('connection', (socket) => {
     console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
 
     // Update system manager information
-    systemManager.acceptMatch(p1, p2);
+    let game = systemManager.acceptMatch(p1, p2);
 
     // Propogate response to other player
     nameToSocket[p2].emit('accepted', {'playerName': p1});
+
+    // Update both players with game state
+    nameToSocket[p2].emit('update', game);
+    socket.emit('update', game);
   });
 
   // Route for rejecting a match request
