@@ -12,11 +12,11 @@ let systemManager = new manager.SystemManager();
 // create app
 const app = express();
 app.use(express.static('dist'));
-app.get('/api/getUsername', (req, res) => res.send({
-    username: os.userInfo().username
-}));
+app.get('/api/registerUsername', (req, res) => {
+  res.json({result: systemManager.addPlayer(req.query.name)});
+});
 
-// create server for sockets
+/*// create server for sockets
 const sockets = {};
 const socketToName = {};
 const nameToSocket = {};
@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
     }
     delete sockets[socket.id];
   });
-});
+});*/
 
 // setup listening on the backend
 app.listen(process.env.PORT || 3100, () => console.log(`Listening on port ${process.env.PORT || 3100}!`));
