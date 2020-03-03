@@ -46,16 +46,8 @@ io.on('connection', (socket) => {
     delete sockets[socket.id];
   });
 
-  /*
-  // Route for getting list of current players
-  socket.on('/getPlayers', function(data, callback) {
-    let players = systemManager.getPlayers();
-    console.log(`${socket.id} is requesting the player list`);
-    callback(players);
-  });
-
   // Route for initiating a match request
-  socket.on('/requestMatch', function(data, callback) {
+  socket.on('requestMatch', function(data, callback) {
     let p2 = data.playerName;
 
     console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`);
@@ -69,7 +61,7 @@ io.on('connection', (socket) => {
   });
 
   // Route for accepting a match request
-  socket.on('/acceptMatch', function(data, callback) {
+  socket.on('acceptMatch', function(data, callback) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
@@ -82,7 +74,7 @@ io.on('connection', (socket) => {
   });
 
   // Route for rejecting a match request
-  socket.on('/rejectMatch', function(data, callback) {
+  socket.on('rejectMatch', function(data, callback) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has rejected Player "${p2}"'s request.`);
@@ -92,6 +84,13 @@ io.on('connection', (socket) => {
 
     // Propogate response to other player
     nameToSocket[p2].emit('rejected', {'playerName': p1});
+  });
+
+  // Route for getting list of current players
+  socket.on('/getPlayers', function(data, callback) {
+    let players = systemManager.getPlayers();
+    console.log(`${socket.id} is requesting the player list`);
+    callback(players);
   });
 
   // Make move
@@ -108,7 +107,7 @@ io.on('connection', (socket) => {
       nameToSocket[result['other']].emit('update', result);
     }
   });
-*/
+
 });
 
 // setup listening on the backend
