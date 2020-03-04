@@ -73,24 +73,24 @@ export default class App extends Component {
     });
 
     // Example of registration of username
-    let name = null;
-    while (name == null) {
-      name = prompt('Enter a username: ');
-      if (name != null) {
-        self.socket.emit('/register', {'name': name},
-          function(resp) {
-            if (resp) {
-              alert('Name successfully registered!');
-              self.name = name;
-            } else {
-              alert('Name registration failed :(');
-              // TODO: When name registration fails
-              // we need to re-prompt the user
-            }
-          }
-        );
-      }
-    }
+    // let name = null;
+    // while (name == null) {
+    //   name = prompt('Enter a username: ');
+    //   if (name != null) {
+    //     self.socket.emit('/register', {'name': name},
+    //       function(resp) {
+    //         if (resp) {
+    //           alert('Name successfully registered!');
+    //           self.name = name;
+    //         } else {
+    //           alert('Name registration failed :(');
+    //           // TODO: When name registration fails
+    //           // we need to re-prompt the user
+    //         }
+    //       }
+    //     );
+    //   }
+    // }
 
     // Example of getting list of players
     self.socket.emit('/getPlayers', {}, resp => {
