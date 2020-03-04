@@ -1,4 +1,11 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
 import io from 'socket.io-client';
 
 import './app.css';
@@ -12,7 +19,8 @@ export default class App extends Component {
 
     this.state = {
       name: '',
-      players: ["Marius", "Hunter", "Minh"]
+      players: ["Marius", "Hunter", "Minh"],
+      gameAccepted: false
     }
 
   }
@@ -22,7 +30,6 @@ export default class App extends Component {
     self.socket.on('connect', () => {
       console.log(`Connected. ID: ${self.socket.id}`);
     });
-
     // Example of registration of username
     let name = prompt('Enter a username: ');
     self.socket.emit('/register', {'name': name}, resp => {
@@ -40,13 +47,28 @@ export default class App extends Component {
       console.log(resp);
       this.setState({players: resp});
     });
+    setTimeout(() => {
+      this.setState({gameAccepted: true})
+    }, 2000)
   }
 
   render() {
     return (
-      <div>
-         <Menu name={this.state.name} players={this.state.players} />
-      </div>
+      <Router>
+        <div>
+          <Switch>
+            <Route exact path="/">
+              {this.state.gameAccepted ?
+                <Redirect to="/game" />:
+                <Menu name={this.state.name} players={this.state.players} />
+              }
+            </Route>
+            <Route path="/game">
+              <Board />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
 
     );
   }
