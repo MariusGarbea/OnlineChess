@@ -1,51 +1,78 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
 import io from 'socket.io-client';
 
 import './app.css';
 import Board from './Board';
-import Status from './Status'; 
+import Menu from './Menu';
 
 export default class App extends Component {
 
   constructor() {
     super();
-  
-    // // Connects app to sockets on the backend
-    // self.socket = io('http://localhost:3200');
-    // self.socket.on('connect', () => {
-    //   console.log(`Connected. ID: ${self.socket.id}`);
-    // });
 
-    // // Handler for getting a game request
-    // self.socket.on('receiveRequest', (data) => {
-    //   let res = confirm(`Player "${data.playerName}" would like to player a game!`);
+    this.state = {
+      name: '',
+      players: ["Marius", "Hunter", "Minh"],
+      gameAccepted: false
+    }
 
-    //   if (res) {
-    //     self.socket.emit('/acceptMatch', {
-    //       'p1': self.name,
-    //       'p2': data.playerName
-    //     });
-    //   } else {
-    //     self.socket.emit('/rejectMatch', {
-    //       'p1': self.name,
-    //       'p2': data.playerName
-    //     });
-    //   }
-    // });
+  }
 
-    // self.socket.on('rejected', (data) => {
-    //   alert(`Player ${data.playerName} has rejected your game request :(`);
-    // });
+  componentDidMount() {
+    // Connects app to sockets on the backend
+    self.socket = io('http://localhost:3200');
+    self.socket.on('connect', () => {
+      console.log(`Connected. ID: ${self.socket.id}`);
+    });
+    // Example of registration of username
+    let name = prompt('Enter a username: ');
+    self.socket.emit('/register', {'name': name}, resp => {
+        if (resp) {
+          alert('Name successfully registered!');
+        } else {
+          alert('Name registration failed. Name already exists.');
+        }
+      }
+    );
+    this.setState({name});
 
-    // self.socket.on('accepted', (data) => {
-    //   alert(`Player ${data.playerName} has accepted your game request!`);
-    // });
+    // Handler for getting a game request
+    self.socket.on('receiveRequest', (data) => {
+      let res = confirm(`Player "${data.playerName}" would like to player a game!`);
 
-    // self.socket.on('update', (data) => {
-    //   console.log(data.fen);
-    // });
+      if (res) {
+        self.socket.emit('/acceptMatch', {
+          'p1': self.name,
+          'p2': data.playerName
+        });
+      } else {
+        self.socket.emit('/rejectMatch', {
+          'p1': self.name,
+          'p2': data.playerName
+        });
+      }
+    });
 
-    // // Example of registration of username
+    self.socket.on('rejected', (data) => {
+      alert(`Player ${data.playerName} has rejected your game request :(`);
+    });
+
+    self.socket.on('accepted', (data) => {
+      alert(`Player ${data.playerName} has accepted your game request!`);
+    });
+
+    self.socket.on('update', (data) => {
+      console.log(data.fen);
+    });
+
+    // Example of registration of username
     // let name = null;
     // while (name == null) {
     //   name = prompt('Enter a username: ');
@@ -65,19 +92,33 @@ export default class App extends Component {
     //   }
     // }
 
-    // // Example of getting list of players
-    // self.socket.emit('/getPlayers', {}, function(resp) {
-    //   console.log(resp);
-    // });
-
+    // Example of getting list of players
+    self.socket.emit('/getPlayers', {}, resp => {
+      console.log(resp);
+      this.setState({players: resp});
+    });
+    setTimeout(() => {
+      this.setState({gameAccepted: true})
+    }, 2000)
   }
 
   render() {
     return (
-        <div className="central">
-          <Board   />
+      <Router>
+        <div>
+          <Switch>
+            <Route exact path="/">
+              {this.state.gameAccepted ?
+                <Redirect to="/game" />:
+                <Menu name={this.state.name} players={this.state.players} />
+              }
+            </Route>
+            <Route path="/game">
+              <Board />
+            </Route>
+          </Switch>
         </div>
-       
+      </Router>
     );
   }
 

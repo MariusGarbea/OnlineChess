@@ -1,0 +1,42 @@
+/* Palette: https://www.color-hex.com/color-palette/8548 */
+
+#bck {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  background-color: #eeeed2;
+  font-family: 'Teko';
+}
+
+#title {
+  margin: 0;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  font-size: 10vh;
+}
+
+p {
+  font-size: 2.5vh;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 30vw;
+  margin-right: 30vw;
+  padding: 0;
+  text-align: left;
+  font-size: 25px;
+}
+
+li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+li:nth-child(odd) {
+  background-color: #769656;
+}
+
+li:nth-child(even) {
+  background-color: #baca44;
+}
