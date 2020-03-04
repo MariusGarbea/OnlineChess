@@ -85,14 +85,13 @@ export default class Board extends Component {
     let move = col[j] + row[i]; 
     this.state.history.push(move);   
     if (this.state.history.length == 2) {
-      let move1 = this.state.history[0]; 
+      let move1 = this.state.history[0];
       let move2 = this.state.history[1]; 
       let move_object = this.state.chess.move({ from: move1, to: move2}); 
       if (move_object != null){
         this.forceUpdate(); 
         this.state.history = [];  
         this.currentPlayer = move_object.color; 
-        console.log(this.currentPlayer); 
         this.state.history = []; 
       } else{ 
         console.log('invalid!'); 
@@ -141,7 +140,7 @@ export default class Board extends Component {
     this.state.board = this.createEmptyMatrix(8, 8, "X");
     this.initializeBoard(this.state.chess.fen());
 
-    this.state.squares = this.tableBoard();   
+    this.state.squares = this.tableBoard();  
     return (
       <div>
         <div>

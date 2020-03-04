@@ -33,6 +33,11 @@ body {
   background-color:#F8F9F9;
 }
 
+.notif{
+  padding-top: 10px;
+  color: #ff7f7f;
+  font-family: 'Roboto'; 
+}
 
 
 .central{
@@ -74,10 +79,10 @@ body {
   border: 10px solid #333;
   background-color: white;
   position: fixed; 
-  top: 50px; 
-  bottom: 70px; 
+  top: 200px; 
+  bottom: 250px; 
   right: 120px;
-  width: 400px;
+  width: 200px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   padding: 2%; 
 }
