@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./app.css";
 import Chess from "chess.js";
+import Status from './Status'
 
 export default class Board extends Component {
   constructor(props) {
@@ -140,9 +141,17 @@ export default class Board extends Component {
     this.initializeBoard(this.state.chess.fen());
 
     this.state.squares = this.tableBoard();   
-    return <div class="chessboard">
-      {this.state.squares.map(square => square)}
-      </div>;
+    return (
+      <div>
+        <div>
+        <Status chess_object={this.state.chess}/> 
+        </div>
+        <div class="chessboard">
+          {this.state.squares.map(square => square)}
+        </div> 
+      </div>
+    )
   }
+
 
 }
