@@ -121,7 +121,8 @@ class SystemManager {
        w: p2,
        b: p1,
        current: 'w',
-       game: new chess.Chess()
+       game: new chess.Chess(),
+       status: null
      };
      this.gameTable[[p1,p2]].fen = this.gameTable[[p1,p2]].game.fen();
 
@@ -151,38 +152,29 @@ class SystemManager {
     * @return {int}: Returns an int correponding to moveStatus code
     */
    validateMove(p, m) {
-     console.log(`${p} -- ${m}`);
-
-     // Verify that the player is actually in a game
      let p2 = this.matchTable[p];
-     console.log(`${p} v. ${p2}`);
-
-     if (p2 != undefined) {
-        // Do move
-        let result = this.gameTable[[p,p2]].move(m);
-        console.log(result);
-
-        if (result != null) {
-          console.log(this.gameTable[[p,p2]].ascii());
-          return {
-            'chess': this.gameTable[[p,p2]],
-            'status': moveStatus.OK,
-            'cur': p,
-            'other': p2
-          };
-        } else {
-          return {
-            'status': moveStatus.INFEASIBLE,
-            'cur': p,
-            'other': p2
-          };
-        }
+     let label = null;
+     if (this.gameTable[[p,p2]]) {;
+       label = [p,p2];
+     } else if (this.gameTable[[p2,p]]) {
+       label = [p2,p];
+     } else {
+       return null;
      }
 
-      return {
-        'status': moveStatus.NOTPAIRED,
-        'cur': p
-      };
+     let result = this.gameTable[label].game.move(m);
+     if (result) {
+       this.gameTable[label].status = moveStatus.OK;
+       this.gameTable[label].fen = this.gameTable[label].game.fen();
+       if (this.gameTable[label].current == 'w')
+          this.gameTable[label].current = 'b';
+       else
+          this.gameTable[label].current = 'w';
+     } else {
+       this.gameTable[label].status = moveStatus.INFEASIBLE;
+     }
+
+     return this.gameTable[label];
    }
 }
 

@@ -7,14 +7,11 @@ export default class Board extends Component {
     super(props);
 
     this.state = {
-      chess: null, // a chess object
-      ascii: null, // ascii string representation of the game
-      board: null, // matrix representation of the game
-      squares: null,
-      gameStatus: "", // string message that output game status
+      board: this.createEmptyMatrix(8, 8, "X"),
+      myturn: false,
       history: [],
-      currentPlayer: 'white',
-    };
+      socket: null
+    }
   }
 
   /**
@@ -77,24 +74,19 @@ export default class Board extends Component {
    * @param {*} i the row number
    * @param {*} j the column number
    */
-  getMove(piece, i,j){
-    let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-    let row = ['8', '7', '6', '5', '4', '3', '2', '1'];
-    let move = col[j] + row[i];
-    this.state.history.push(move);
-    if (this.state.history.length == 2) {
-      let move1 = this.state.history[0];
-      let move2 = this.state.history[1];
-      let move_object = this.state.chess.move({ from: move1, to: move2});
-      if (move_object != null){
-        this.forceUpdate();
-        this.state.history = [];
-        this.currentPlayer = move_object.color;
-        console.log(this.currentPlayer);
-        this.state.history = [];
-      } else{
-        console.log('invalid!');
-        this.state.history = [];
+  getMove(piece, i, j) {
+    if (this.state.myturn) {
+      let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+      let row = ['8', '7', '6', '5', '4', '3', '2', '1'];
+      let move = col[j] + row[i];
+      this.state.history.push(move);
+      if (this.state.history.length == 2) {
+        let move1 = this.state.history[0];
+        let move2 = this.state.history[1];
+        this.state.socket.emit('move', {from: move1, to: move2});
+        this.setState({
+          history: []
+        });
       }
     }
   }
@@ -136,16 +128,15 @@ export default class Board extends Component {
 
   render() {
     const app = this.props.app;
+    this.state.socket = app.state.socket;
 
-    // Parse the initial FEN representation.
-    this.state.board = this.createEmptyMatrix(8, 8, "X");
-
-    if (app.state.game)
+    if (app.state.game) {
       this.initializeBoard(app.state.game.fen);
+      this.state.myturn = app.state.myturn;
+    }
 
-    this.state.squares = this.tableBoard();
     return <div class="chessboard">
-      {this.state.squares.map(square => square)}
+      {this.tableBoard().map(square => square)}
       </div>;
   }
 

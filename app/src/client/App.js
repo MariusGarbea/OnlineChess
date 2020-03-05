@@ -13,7 +13,8 @@ export default class App extends Component {
     this.state = {
       socket: io('http://localhost:3200'),
       username: null,
-      game: null
+      game: null,
+      myturn: false
     }
 
     // What to do when this socket connects
@@ -52,13 +53,13 @@ export default class App extends Component {
 
     // Receives game updates
     this.state.socket.on('update', (data) => {
-      this.setState({
-        game: data
-      });
       let w = data.w;
       let b = data.b;
       let me = w == this.state.username ? 'w' : 'b';
-      if (me == data.current) console.log('Your turn is now!');
+      this.setState({
+        myturn: me == data.current,
+        game: data
+      });
     });
 
     this.registerUsername();
@@ -92,11 +93,7 @@ export default class App extends Component {
   }
 
   myTurn() {
-    if (this.state.game) {
-      let w = this.state.game.w;
-      let b = this.state.game.b;
-      let me = w == this.state.username ? 'w' : 'b';
-      if (me == this.state.game.current)
+    if (this.state.myturn) {
         return <p>It's your turn!</p>;
     }
     return <p>Waiting on opponent...</p>;

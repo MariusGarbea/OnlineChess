@@ -98,20 +98,17 @@ io.on('connection', (socket) => {
   });
 
   // Make move
-  socket.on('/move', function(data, callback) {
+  socket.on('move', (data) => {
+    let move = data;
     let player = socketToName[socket.id];
-    let move = data.move;
-
-    // Validate the move
     let result = systemManager.validateMove(player, move);
-
-    if (result.status == manager.MoveStatus.OK) {
-      result['fen'] = result['chess'].fen();
-      socket.emit('update', result);
-      nameToSocket[result['other']].emit('update', result);
+    if (result) {
+      let b = result['b'];
+      let w = result['w'];
+      nameToSocket[b].emit('update', result);
+      nameToSocket[w].emit('update', result);
     }
   });
-
 });
 
 // setup listening on the backend
