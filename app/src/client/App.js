@@ -17,98 +17,80 @@ export default class App extends Component {
   constructor() {
     super();
 
+    // Set the inital state of the system
     this.state = {
-      name: '',
+      username: '',
       players: ["Marius", "Hunter", "Minh"],
-      gameAccepted: false
+      gameAccepted: false,
+      game: null,
+      socket: null,
+      myturn: false
     }
+
+    this.registerUsername();
 
   }
 
-  handleSocketConnection(){
-     // Connects app to sockets on the backend 
-    self.socket = io('http://localhost:3200');
-    self.socket.on('connect', () => {
-      console.log(`Connected. ID: ${self.socket.id}`);
-    });
-    // Example of registration of username
-    let name = prompt('Enter a username: ');
-    self.socket.emit('/register', {'name': name}, resp => {
-        if (resp) {
-          alert('Name successfully registered!');
-        } else {
-          alert('Name registration failed. Name already exists.');
-        }
-      }
-    );
-    this.setState({name});
+  handleSocketConnection() {
+     // Connects app to sockets on the backend
+    this.state.socket = io('http://localhost:3200');
 
-    // Handler for getting a game request 
-    self.socket.on('receiveRequest', (data) => {
+    // What to do when this socket connects
+    this.state.socket.on('connect', () => {
+      if (this.state.username) {
+        this.state.socket.emit('bind', {name: this.state.username});
+      }
+    });
+
+    // What to do when this socket receives a play request
+    this.state.socket.on('receiveRequest', (data) => {
       let res = confirm(`Player "${data.playerName}" would like to player a game!`);
 
       if (res) {
-        self.socket.emit('/acceptMatch', {
+        this.state.socket.emit('acceptMatch', {
           'p1': self.name,
           'p2': data.playerName
         });
+        this.setState({gameAccepted: true})
       } else {
-        self.socket.emit('/rejectMatch', {
+        this.state.socket.emit('rejectMatch', {
           'p1': self.name,
           'p2': data.playerName
         });
       }
     });
 
-    self.socket.on('rejected', (data) => {
+    // Alerts the player that their match was rejected
+    this.state.socket.on('rejected', (data) => {
       alert(`Player ${data.playerName} has rejected your game request :(`);
     });
 
-    self.socket.on('accepted', (data) => {
+    // Alerts the player that their match was accepted
+    this.state.socket.on('accepted', (data) => {
       alert(`Player ${data.playerName} has accepted your game request!`);
-    });
-
-    self.socket.on('update', (data) => {
-      console.log(data.fen);
-    });
-
-    // Example of registration of username
-    // let name = null;
-    // while (name == null) {
-    //   name = prompt('Enter a username: ');
-    //   if (name != null) {
-    //     self.socket.emit('/register', {'name': name},
-    //       function(resp) {
-    //         if (resp) {
-    //           alert('Name successfully registered!');
-    //           self.name = name;
-    //         } else {
-    //           alert('Name registration failed :(');
-    //           // TODO: When name registration fails
-    //           // we need to re-prompt the user
-    //         }
-    //       }
-    //     );
-    //   }
-    // }
-
-    // Example of getting list of players
-    self.socket.emit('/getPlayers', {}, resp => {
-      console.log(resp);
-      this.setState({players: resp});
-    });
-    setTimeout(() => {
       this.setState({gameAccepted: true})
-    }, 2000)
+    });
 
+    // Receives game updates
+    this.state.socket.on('update', (data) => {
+      let w = data.w;
+      let b = data.b;
+      let me = w == this.state.username ? 'w' : 'b';
+      this.setState({
+        myturn: me == data.current,
+        game: data
+      });
+    });
+
+    // For testing purposes and should probably be removed
+    self.socket = this.state.socket;
   }
 
   componentDidMount() {
-    this.handleSocketConnection(); 
+    this.handleSocketConnection();
   }
 
   render() {
-
     return (
       <Router>
         <div>
@@ -120,12 +102,34 @@ export default class App extends Component {
               }
             </Route>
             <Route path="/game">
-              <Board />
+              <Board app={this} socket={this.state.socket} game={this.state.game}/>
             </Route>
           </Switch>
         </div>
       </Router>
-    );
-  }
+  )}
 
+  /**
+  Function to force a user to register their username
+  */
+  registerUsername() {
+    let name = prompt('Enter a username: ');
+    fetch(`/api/registerUsername?name=${name}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data['result']) {
+          alert('Name successfully registered!');
+          this.setState({
+            username: name
+          });
+          this.state.socket.emit('bind', {name: this.state.username});
+        } else {
+          alert('Name is already taken :( Try again');
+          this.registerUsername();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }

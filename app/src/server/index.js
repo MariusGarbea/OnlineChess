@@ -12,9 +12,11 @@ let systemManager = new manager.SystemManager();
 // create app
 const app = express();
 app.use(express.static('dist'));
-app.get('/api/getUsername', (req, res) => res.send({
-    username: os.userInfo().username
-}));
+
+// Handle for registering a username
+app.get('/api/registerUsername', (req, res) => {
+  res.json({result: systemManager.addPlayer(req.query.name)});
+});
 
 // create server for sockets
 const sockets = {};
@@ -25,33 +27,27 @@ io.on('connection', (socket) => {
   sockets[socket.id] = socket;
   console.log(`New socket connected: ${socket.id}`);
 
-  // Register name route
-  socket.on('/register', function(data, callback) {
-    console.log(`${socket.id} is requesting name: ${data.name}`);
-
-    // Send a response back to the client
-    let success = systemManager.addPlayer(data.name);
-    callback(success);
-
-    // If registration was succesful, bind name to socket id
-    // so that we can free name when disconnected
-    if (success) {
-      socketToName[socket.id] = data.name;
-      nameToSocket[data.name] = socket;
-
-      console.log(`Success! ${socket.id} is bound to ${data.name}`);
-    }
+  // Handles the binding of sockets to names and name to sockets
+  socket.on('bind', (data, callback) => {
+    systemManager.addPlayer(data.name);
+    nameToSocket[data.name] = socket;
+    socketToName[socket.id] = data.name;
+    console.log(`Socket ID ${socket.id} is bound to ${data.name}`);
   });
 
-  // Route for getting list of current players
-  socket.on('/getPlayers', function(data, callback) {
-    let players = systemManager.getPlayers();
-    console.log(`${socket.id} is requesting the player list`);
-    callback(players);
+  // Handles socket disconnects
+  socket.on('disconnect', () => {
+    console.log(`${socket.id} has diconnected.`);
+    if (socketToName[socket.id]) {
+      systemManager.removePlayer(socketToName[socket.id]);
+      console.log(`${socketToName[socket.id]} is no longer bound.`);
+      delete socketToName[socket.id];
+    }
+    delete sockets[socket.id];
   });
 
   // Route for initiating a match request
-  socket.on('/requestMatch', function(data, callback) {
+  socket.on('requestMatch', function(data, callback) {
     let p2 = data.playerName;
 
     console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`);
@@ -65,20 +61,24 @@ io.on('connection', (socket) => {
   });
 
   // Route for accepting a match request
-  socket.on('/acceptMatch', function(data, callback) {
+  socket.on('acceptMatch', function(data, callback) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
 
     // Update system manager information
-    systemManager.acceptMatch(p1, p2);
+    let game = systemManager.acceptMatch(p1, p2);
 
     // Propogate response to other player
     nameToSocket[p2].emit('accepted', {'playerName': p1});
+
+    // Update both players with game state
+    nameToSocket[p2].emit('update', game);
+    socket.emit('update', game);
   });
 
   // Route for rejecting a match request
-  socket.on('/rejectMatch', function(data, callback) {
+  socket.on('rejectMatch', function(data, callback) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has rejected Player "${p2}"'s request.`);
@@ -90,30 +90,24 @@ io.on('connection', (socket) => {
     nameToSocket[p2].emit('rejected', {'playerName': p1});
   });
 
-  // Make move
-  socket.on('/move', function(data, callback) {
-    let player = socketToName[socket.id];
-    let move = data.move;
-
-    // Validate the move
-    let result = systemManager.validateMove(player, move);
-
-    if (result.status == manager.MoveStatus.OK) {
-      result['fen'] = result['chess'].fen();
-      socket.emit('update', result);
-      nameToSocket[result['other']].emit('update', result);
-    }
+  // Route for getting list of current players
+  socket.on('/getPlayers', function(data, callback) {
+    let players = systemManager.getPlayers();
+    console.log(`${socket.id} is requesting the player list`);
+    callback(players);
   });
 
-  // When disconnect, delete the socket with the variable
-  socket.on('disconnect', () => {
-    console.log(`${socket.id} has diconnected.`);
-    if (socketToName[socket.id]) {
-      systemManager.removePlayer(socketToName[socket.id]);
-      console.log(`${socketToName[socket.id]} is no longer bound.`);
-      delete socketToName[socket.id];
+  // Make move
+  socket.on('move', (data) => {
+    let move = data;
+    let player = socketToName[socket.id];
+    let result = systemManager.validateMove(player, move);
+    if (result) {
+      let b = result['b'];
+      let w = result['w'];
+      nameToSocket[b].emit('update', result);
+      nameToSocket[w].emit('update', result);
     }
-    delete sockets[socket.id];
   });
 });
 
