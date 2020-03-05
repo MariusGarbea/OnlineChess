@@ -28,7 +28,6 @@ export default class App extends Component {
     }
 
     this.registerUsername();
-
   }
 
   handleSocketConnection() {
@@ -87,9 +86,6 @@ export default class App extends Component {
         players: data.players
       });
     });
-
-    // For testing purposes and should probably be removed
-    self.socket = this.state.socket;
   }
 
   componentDidMount() {
@@ -104,7 +100,7 @@ export default class App extends Component {
             <Route exact path="/">
               {this.state.gameAccepted ?
                 <Redirect to="/game" />:
-                <Menu name={this.state.username} players={this.state.players} />
+                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket}/>
               }
             </Route>
             <Route path="/game">

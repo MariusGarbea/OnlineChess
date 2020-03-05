@@ -6,6 +6,7 @@ export default class Menu extends Component {
 // Invite player
   requestPlayer = playerID => {
     alert(`Sending invitation to ${playerID}`);
+    this.props.socket.emit('requestMatch', {'playerName': playerID});
   }
 
   render() {
