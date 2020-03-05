@@ -82,6 +82,12 @@ export default class App extends Component {
       });
     });
 
+    this.state.socket.on('playerList', (data) => {
+      this.setState({
+        players: data.players
+      });
+    });
+
     // For testing purposes and should probably be removed
     self.socket = this.state.socket;
   }
@@ -98,7 +104,7 @@ export default class App extends Component {
             <Route exact path="/">
               {this.state.gameAccepted ?
                 <Redirect to="/game" />:
-                <Menu name={this.state.name} players={this.state.players} />
+                <Menu name={this.state.username} players={this.state.players} />
               }
             </Route>
             <Route path="/game">
