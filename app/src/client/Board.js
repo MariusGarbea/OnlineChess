@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./app.css";
 import Chess from "chess.js";
-import Status from './Status'
+import Status from './Status';
 
 export default class Board extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class Board extends Component {
       history: [],
       socket: props.socket,
       game: props.game
-    }
+    };
   }
 
   /**
@@ -100,7 +100,7 @@ export default class Board extends Component {
       'B': '♗', 'N': '♘', 'P': '♙',
       'k': '♚', 'q': '♛', 'r': '♜',
       'b': '♝', 'n': '♞', 'p': '♟'
-    }
+    };
     let squares = [];
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
@@ -146,7 +146,7 @@ export default class Board extends Component {
           {this.state.squares.map(square => square)}
         </div>
       </div>
-    )
+    );
   }
 
 

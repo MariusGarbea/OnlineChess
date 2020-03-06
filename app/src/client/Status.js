@@ -8,7 +8,7 @@ export default class Status extends Component {
         this.state = {
             chess: props.chess_object,
             status:  'Let\'s begin! Player 1 starts the Game',
-        }
+        };
     }
 
     getCurrentMove() {
@@ -38,7 +38,7 @@ export default class Status extends Component {
                 if(check_stale){
                     curr_status = <div class='column'>
                     <b>Player 1 </b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>Player 2 is in {check_or_stale}</div></div>
+                    <div className='notif'>Player 2 is in {check_or_stale}</div></div>;
                 }
                 else {
                     curr_status = <div class='column'>
@@ -49,7 +49,7 @@ export default class Status extends Component {
                 if(check_stale){
                     curr_status = <div class='column'>
                     <b>Player 2 </b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>Player 1 is in {check_or_stale}</div></div>
+                    <div className='notif'>Player 1 is in {check_or_stale}</div></div>;
                 }
                 else {
                     curr_status = <div class='column'>

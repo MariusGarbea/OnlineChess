@@ -162,7 +162,7 @@ class SystemManager {
    validateMove(p, m) {
      let p2 = this.matchTable[p];
      let label = null;
-     if (this.gameTable[[p,p2]]) {;
+     if (this.gameTable[[p,p2]]) {
        label = [p,p2];
      } else if (this.gameTable[[p2,p]]) {
        label = [p2,p];

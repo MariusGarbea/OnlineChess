@@ -25,7 +25,7 @@ export default class App extends Component {
       game: null,
       socket: null,
       myturn: false
-    }
+    };
 
     this.registerUsername();
   }
@@ -50,7 +50,7 @@ export default class App extends Component {
           'p1': self.name,
           'p2': data.playerName
         });
-        this.setState({gameAccepted: true})
+        this.setState({gameAccepted: true});
       } else {
         this.state.socket.emit('rejectMatch', {
           'p1': self.name,
@@ -67,7 +67,7 @@ export default class App extends Component {
     // Alerts the player that their match was accepted
     this.state.socket.on('accepted', (data) => {
       alert(`Player ${data.playerName} has accepted your game request!`);
-      this.setState({gameAccepted: true})
+      this.setState({gameAccepted: true});
     });
 
     // Receives game updates
@@ -109,7 +109,7 @@ export default class App extends Component {
           </Switch>
         </div>
       </Router>
-  )}
+  );}
 
   /**
   Function to force a user to register their username
