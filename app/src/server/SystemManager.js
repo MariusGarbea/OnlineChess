@@ -33,6 +33,9 @@ class SystemManager {
       return false;
     } else {
       this.connectedPlayers.add(p);
+      if (this.matchTable[p] && !this.busyPlayers.has(p)) {
+        this.busyPlayers.add(p);
+      }
       return true;
     }
   }
@@ -43,6 +46,11 @@ class SystemManager {
    * @return {boolean} true if successful, false if name not in our list
    */
   removePlayer(p) {
+
+    if (this.busyPlayers.has(p)) {
+      this.busyPlayers.delete(p);
+    }
+
     if (this.connectedPlayers.has(p)) {
       this.connectedPlayers.delete(p);
       return true;

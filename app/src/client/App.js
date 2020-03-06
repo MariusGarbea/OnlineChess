@@ -20,7 +20,7 @@ export default class App extends Component {
     // Set the inital state of the system
     this.state = {
       username: '',
-      players: ["Marius", "Hunter", "Minh"],
+      players: [],
       gameAccepted: false,
       game: null,
       socket: null,
