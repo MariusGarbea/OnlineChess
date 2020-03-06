@@ -20,15 +20,14 @@ export default class App extends Component {
     // Set the inital state of the system
     this.state = {
       username: '',
-      players: ["Marius", "Hunter", "Minh"],
+      players: [],
       gameAccepted: false,
       game: null,
       socket: null,
       myturn: false
-    }
+    };
 
     this.registerUsername();
-
   }
 
   handleSocketConnection() {
@@ -51,7 +50,7 @@ export default class App extends Component {
           'p1': self.name,
           'p2': data.playerName
         });
-        this.setState({gameAccepted: true})
+        this.setState({gameAccepted: true});
       } else {
         this.state.socket.emit('rejectMatch', {
           'p1': self.name,
@@ -68,7 +67,7 @@ export default class App extends Component {
     // Alerts the player that their match was accepted
     this.state.socket.on('accepted', (data) => {
       alert(`Player ${data.playerName} has accepted your game request!`);
-      this.setState({gameAccepted: true})
+      this.setState({gameAccepted: true});
     });
 
     // Receives game updates
@@ -82,8 +81,11 @@ export default class App extends Component {
       });
     });
 
-    // For testing purposes and should probably be removed
-    self.socket = this.state.socket;
+    this.state.socket.on('playerList', (data) => {
+      this.setState({
+        players: data.players
+      });
+    });
   }
 
   componentDidMount() {
@@ -98,16 +100,16 @@ export default class App extends Component {
             <Route exact path="/">
               {this.state.gameAccepted ?
                 <Redirect to="/game" />:
-                <Menu name={this.state.name} players={this.state.players} />
+                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket}/>
               }
             </Route>
             <Route path="/game">
-              <Board app={this} socket={this.state.socket} game={this.state.game}/>
+              <Board app={this} socket={this.state.socket} game={this.state.game} username={this.state.username}/>
             </Route>
           </Switch>
         </div>
       </Router>
-  )}
+  );}
 
   /**
   Function to force a user to register their username

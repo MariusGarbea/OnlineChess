@@ -33,6 +33,9 @@ class SystemManager {
       return false;
     } else {
       this.connectedPlayers.add(p);
+      if (this.matchTable[p] && !this.busyPlayers.has(p)) {
+        this.busyPlayers.add(p);
+      }
       return true;
     }
   }
@@ -43,6 +46,11 @@ class SystemManager {
    * @return {boolean} true if successful, false if name not in our list
    */
   removePlayer(p) {
+
+    if (this.busyPlayers.has(p)) {
+      this.busyPlayers.delete(p);
+    }
+
     if (this.connectedPlayers.has(p)) {
       this.connectedPlayers.delete(p);
       return true;
@@ -125,6 +133,7 @@ class SystemManager {
        status: null
      };
      this.gameTable[[p1,p2]].fen = this.gameTable[[p1,p2]].game.fen();
+     this.gameTable[[p1,p2]].history = this.gameTable[[p1,p2]].game.history();
 
      // Return game board
      return this.gameTable[[p1,p2]];
@@ -154,7 +163,7 @@ class SystemManager {
    validateMove(p, m) {
      let p2 = this.matchTable[p];
      let label = null;
-     if (this.gameTable[[p,p2]]) {;
+     if (this.gameTable[[p,p2]]) {
        label = [p,p2];
      } else if (this.gameTable[[p2,p]]) {
        label = [p2,p];
@@ -162,10 +171,12 @@ class SystemManager {
        return null;
      }
 
+     console.log(m);
      let result = this.gameTable[label].game.move(m);
      if (result) {
        this.gameTable[label].status = moveStatus.OK;
        this.gameTable[label].fen = this.gameTable[label].game.fen();
+       this.gameTable[label].history = this.gameTable[label].game.history();
        if (this.gameTable[label].current == 'w')
           this.gameTable[label].current = 'b';
        else
