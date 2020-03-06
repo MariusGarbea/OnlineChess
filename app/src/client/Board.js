@@ -12,7 +12,8 @@ export default class Board extends Component {
       myturn: false,
       history: [],
       socket: props.socket,
-      game: props.game
+      gameHistory: null,
+      chess: null
     };
   }
 
@@ -134,13 +135,17 @@ export default class Board extends Component {
     if (app.state.game) {
       this.initializeBoard(app.state.game.fen);
       this.state.myturn = app.state.myturn;
+      this.state.chess = new Chess(app.state.game.fen);
+      this.state.gameHistory = app.state.game.history;
     }
+
+    console.log(this.state);
 
     this.state.squares = this.tableBoard();
     return (
       <div>
         <div>
-        <Status chess_object={this.state.chess}/>
+        <Status game={app.state.game} chess_object={this.state.chess} myturn={this.state.myturn} history={this.state.gameHistory} username={this.props.username}/>
         </div>
         <div class="chessboard">
           {this.state.squares.map(square => square)}

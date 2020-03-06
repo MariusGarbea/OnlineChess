@@ -59,7 +59,6 @@ io.on('connection', (socket) => {
       nameToSocket[p2].emit('receiveRequest', {'playerName': socketToName[socket.id]});
     } else {
       console.log("Request has failed.");
-      socket.emit('rejected', {'playerName': socketToName[socket.id]});
     }
   });
 

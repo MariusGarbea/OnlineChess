@@ -133,6 +133,7 @@ class SystemManager {
        status: null
      };
      this.gameTable[[p1,p2]].fen = this.gameTable[[p1,p2]].game.fen();
+     this.gameTable[[p1,p2]].history = this.gameTable[[p1,p2]].game.history();
 
      // Return game board
      return this.gameTable[[p1,p2]];
@@ -170,10 +171,12 @@ class SystemManager {
        return null;
      }
 
+     console.log(m);
      let result = this.gameTable[label].game.move(m);
      if (result) {
        this.gameTable[label].status = moveStatus.OK;
        this.gameTable[label].fen = this.gameTable[label].game.fen();
+       this.gameTable[label].history = this.gameTable[label].game.history();
        if (this.gameTable[label].current == 'w')
           this.gameTable[label].current = 'b';
        else

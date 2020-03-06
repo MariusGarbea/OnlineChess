@@ -104,7 +104,7 @@ export default class App extends Component {
               }
             </Route>
             <Route path="/game">
-              <Board app={this} socket={this.state.socket} game={this.state.game}/>
+              <Board app={this} socket={this.state.socket} game={this.state.game} username={this.state.username}/>
             </Route>
           </Switch>
         </div>
