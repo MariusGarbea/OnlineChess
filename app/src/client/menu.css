@@ -1,7 +1,7 @@
 /* Palette: https://www.color-hex.com/color-palette/8548 */
 
 #bck {
-  padding: 0;
+  padding: 100px;
   margin: 0;
   height: 100vh;
   background-color: #eeeed2;
@@ -17,6 +17,7 @@
 
 p {
   font-size: 2.5vh;
+  text-align: center;
 }
 
 ul {
