@@ -119,7 +119,7 @@ export default class App extends Component {
     fetch(`/api/registerUsername?name=${name}`)
       .then((resp) => resp.json())
       .then((data) => {
-        if (data == ''){
+        if (name){
           alert('Please enter a name!');
           this.registerUsername();
         } else if (data['result']) {
