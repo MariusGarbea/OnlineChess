@@ -36,8 +36,8 @@ export default class Menu extends Component {
   }
 
   render() {
-    let playerList = this.props.players.filter(p => p != this.props.name).map(p => <li key={p} onClick={() => this.requestPlayer(p)}>{p}</li>);
-    let requestList = this.props.requests.filter(p => p != this.props.name).map(p => <li key={p} onClick={() => this.acceptRequest(p)}>{p}</li>);
+    let playerList = this.props.players.filter(p => p != this.props.name && this.props.name).map(p => <li key={p} onClick={() => this.requestPlayer(p)}>{p}</li>);
+    let requestList = this.props.requests.filter(p => p != this.props.name && this.props.name).map(p => <li key={p} onClick={() => this.acceptRequest(p)}>{p}</li>);
     return (
       <div id="bck">
         <h2 id="title"> Online Chess </h2>
