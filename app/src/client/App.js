@@ -24,7 +24,8 @@ export default class App extends Component {
       gameAccepted: false,
       game: null,
       socket: io('http://localhost:3200'),
-      myturn: false
+      myturn: false,
+      requests: []
     };
   }
 
@@ -38,20 +39,11 @@ export default class App extends Component {
 
     // What to do when this socket receives a play request
     this.state.socket.on('receiveRequest', (data) => {
-      let res = confirm(`Player "${data.playerName}" would like to player a game!`);
-      console.log(res);
-      if (res) {
-        this.state.socket.emit('acceptMatch', {
-          'p1': self.name,
-          'p2': data.playerName
-        });
-        this.setState({gameAccepted: true});
-      } else {
-        this.state.socket.emit('rejectMatch', {
-          'p1': self.name,
-          'p2': data.playerName
-        });
-      }
+      let rs = this.state.requests;
+      rs.push(data.playerName);
+      this.setState({
+        requests: rs
+      });
     });
 
     // Alerts the player that their match was rejected
@@ -67,6 +59,7 @@ export default class App extends Component {
 
     // Receives game updates
     this.state.socket.on('update', (data) => {
+      this.setState({gameAccepted: true});
       let w = data.w;
       let b = data.b;
       let me = w == this.state.username ? 'w' : 'b';
@@ -101,7 +94,7 @@ export default class App extends Component {
             <Route exact path="/">
               {this.state.gameAccepted ?
                 <Redirect to="/game" />:
-                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket}/>
+                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket} requests={this.state.requests}/>
               }
             </Route>
             <Route path="/game">

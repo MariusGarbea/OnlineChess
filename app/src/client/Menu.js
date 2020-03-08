@@ -9,6 +9,13 @@ export default class Menu extends Component {
     this.props.socket.emit('requestMatch', {'playerName': playerID});
   }
 
+  acceptRequest(playerID) {
+    this.props.socket.emit('acceptMatch', {
+      'p1': this.props.name,
+      'p2': playerID
+    });
+  }
+
   registerUsername() {
     let name = document.getElementById('name').value;
     fetch(`/api/registerUsername?name=${name}`)
@@ -30,6 +37,7 @@ export default class Menu extends Component {
 
   render() {
     let playerList = this.props.players.filter(p => p != this.props.name).map(p => <li key={p} onClick={() => this.requestPlayer(p)}>{p}</li>);
+    let requestList = this.props.requests.filter(p => p != this.props.name).map(p => <li key={p} onClick={() => this.acceptRequest(p)}>{p}</li>);
     return (
       <div id="bck">
         <h2 id="title"> Online Chess </h2>
@@ -40,6 +48,10 @@ export default class Menu extends Component {
         <p> {playerList.length == 0 ? "Nobody is available to play :(" : "Challenge a player from the following list"} </p>
         <ul>
           {playerList}
+        </ul>
+        <p>Requests:</p>
+        <ul>
+          {requestList}
         </ul>
       </div>
     )
