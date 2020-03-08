@@ -124,4 +124,51 @@ describe('Board.js Test Suite', () => {
     expect(firstMove).toBeNull(); 
   });
 
+  it('Pawn capture', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    let secondMove = chessObject.move({from: 'd7', to: 'd5'}); 
+    let thirdMove = chessObject.move({from: 'e4', to: 'd5'}); 
+    expect(thirdMove).toBeTruthy(); 
+  });
+
+  it('Pawn capture', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    let secondMove = chessObject.move({from: 'd7', to: 'd5'}); 
+    let thirdMove = chessObject.move({from: 'e4', to: 'd5'}); 
+    let expectedPawns_afterCapture = 7; 
+    let actualPawns_afterCapture = (chessObject.fen().match(/p/g)).length;  
+    expect(thirdMove).toBeTruthy(); 
+    expect(expectedPawns_afterCapture).toStrictEqual(actualPawns_afterCapture); 
+  });
+
+  it('General capture', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    let secondMove = chessObject.move({from: 'g7', to: 'g6'}); 
+    let thirdMove = chessObject.move({from: 'd1', to: 'h5'}); 
+    let fourthMove = chessObject.move({from: 'f7', to: 'f6'}); 
+    let fifthMove = chessObject.move({from: 'h5', to: 'g6'}); 
+    let expectedPawns_afterCapture = 7; 
+    let actualPawns_afterCapture = (chessObject.fen().match(/p/g)).length;  
+    expect(fifthMove).toBeTruthy(); 
+    expect(expectedPawns_afterCapture).toStrictEqual(actualPawns_afterCapture); 
+  });
+
+  it('General capture', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    let secondMove = chessObject.move({from: 'g7', to: 'g6'}); 
+    let thirdMove = chessObject.move({from: 'd1', to: 'h5'}); 
+    let fourthMove = chessObject.move({from: 'f7', to: 'f6'}); 
+    let fifthMove = chessObject.move({from: 'h5', to: 'g6'}); 
+    let expectedPawns_afterCapture = 7; 
+    let actualPawns_afterCapture = (chessObject.fen().match(/p/g)).length;  
+    expect(fifthMove).toBeTruthy(); 
+    expect(expectedPawns_afterCapture).toStrictEqual(actualPawns_afterCapture); 
+  });
+
+
+
 }); 
