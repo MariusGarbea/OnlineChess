@@ -1,19 +1,7 @@
-
-function createEmptyMatrix(numrows, numcols, initial) {
-  var arr = [];
-  for (var i = 0; i < numrows; ++i) {
-    var columns = [];
-    for (var j = 0; j < numcols; ++j) {
-      columns[j] = initial;
-    }
-    arr[i] = columns;
-  }
-  return arr;
-}
-
+import { createEmptyMatrix } from './App.mock.js';
 
 describe('Board.js Test Suite', () => {
-  it('Initialize empty matrix', () => {
+  it('Board Layout Size', () => {
     let emptyBoard = [ 
       [0, 0, 0, 0, 0, 0, 0, 0], 
       [0, 0, 0, 0, 0, 0, 0, 0],
@@ -28,4 +16,9 @@ describe('Board.js Test Suite', () => {
   // console.log(createEmptyMatrix(8,8,0)); 
     expect(createEmptyMatrix(8,8,0)).toStrictEqual(emptyBoard);    
   });
+
+
+  // it('Initial peace allotment', () => {
+
+  // })
 });
