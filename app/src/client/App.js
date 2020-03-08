@@ -23,17 +23,12 @@ export default class App extends Component {
       players: [],
       gameAccepted: false,
       game: null,
-      socket: null,
+      socket: io('http://localhost:3200'),
       myturn: false
     };
-
-    this.registerUsername();
   }
 
   handleSocketConnection() {
-     // Connects app to sockets on the backend
-    this.state.socket = io('http://localhost:3200');
-
     // What to do when this socket connects
     this.state.socket.on('connect', () => {
       if (this.state.username) {
@@ -81,6 +76,12 @@ export default class App extends Component {
       });
     });
 
+    this.state.socket.on('updateName', (data) => {
+      this.setState({
+        username: data.name
+      });
+    });
+
     this.state.socket.on('playerList', (data) => {
       this.setState({
         players: data.players
@@ -110,31 +111,4 @@ export default class App extends Component {
         </div>
       </Router>
   );}
-
-  /**
-  Function to force a user to register their username
-  */
-  registerUsername() {
-    let name = prompt('Enter a username: ');
-    fetch(`/api/registerUsername?name=${name}`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        if (data == ''){
-          alert('Please enter a name!');
-          this.registerUsername();
-        } else if (data['result']) {
-          alert('Name successfully registered!');
-          this.setState({
-            username: name
-          });
-          this.state.socket.emit('bind', {name: this.state.username});
-        } else {
-          alert('Name is already taken :( Try again');
-          this.registerUsername();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
 }
