@@ -1,4 +1,4 @@
-import { createEmptyMatrix, initializeBoard, chessObject, createStaleMate } from './BoardMock.js';
+import { createEmptyMatrix, initializeBoard, chessObject } from './BoardMock.js';
 
 describe('Board.js Test Suite', () => {
   it('Board Layout Size', () => {
@@ -191,12 +191,4 @@ describe('Board.js Test Suite', () => {
       }); 
     expect(chessObject.in_stalemate()).toBe(true); 
   });
-
-
-  
-
-
-
-
-
 }); 

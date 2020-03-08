@@ -139,8 +139,6 @@ export default class Board extends Component {
       this.state.gameHistory = app.state.game.history;
     }
 
-    console.log(this.state);
-
     this.state.squares = this.tableBoard();
     return (
       <div>
@@ -153,6 +151,4 @@ export default class Board extends Component {
       </div>
     );
   }
-
-
 }
