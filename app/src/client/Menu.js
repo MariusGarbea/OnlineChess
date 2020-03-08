@@ -9,12 +9,34 @@ export default class Menu extends Component {
     this.props.socket.emit('requestMatch', {'playerName': playerID});
   }
 
+  registerUsername() {
+    let name = document.getElementById('name').value;
+    fetch(`/api/registerUsername?name=${name}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data == ''){
+          alert('Please enter a name!');
+        } else if (data['result']) {
+          alert('Name successfully registered!');
+          this.props.socket.emit('bind', {name: name});
+        } else {
+          alert('Name is already taken :( Try again');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   render() {
     let playerList = this.props.players.filter(p => p != this.props.name).map(p => <li key={p} onClick={() => this.requestPlayer(p)}>{p}</li>);
     return (
       <div id="bck">
         <h2 id="title"> Online Chess </h2>
-        <p> Welcome {this.props.name}! </p>
+        <p> Welcome!</p>
+        <label>Name: </label>
+        <input type="text" id="name" name="name" />
+        <input type="submit" onClick={() => this.registerUsername()} />
         <p> {playerList.length == 0 ? "Nobody is available to play :(" : "Challenge a player from the following list"} </p>
         <ul>
           {playerList}

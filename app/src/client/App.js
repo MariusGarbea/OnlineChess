@@ -23,17 +23,12 @@ export default class App extends Component {
       players: [],
       gameAccepted: false,
       game: null,
-      socket: null,
+      socket: io('http://localhost:3200'),
       myturn: false
     };
-
-    this.registerUsername();
   }
 
   handleSocketConnection() {
-     // Connects app to sockets on the backend
-    this.state.socket = io('http://localhost:3200');
-
     // What to do when this socket connects
     this.state.socket.on('connect', () => {
       if (this.state.username) {
@@ -78,6 +73,12 @@ export default class App extends Component {
       this.setState({
         myturn: me == data.current,
         game: data
+      });
+    });
+
+    this.state.socket.on('updateName', (data) => {
+      this.setState({
+        username: data.name
       });
     });
 

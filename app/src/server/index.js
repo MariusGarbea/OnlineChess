@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
     nameToSocket[data.name] = socket;
     socketToName[socket.id] = data.name;
     console.log(`Socket ID ${socket.id} is bound to ${data.name}`);
-
+    socket.emit('updateName', {name: data.name});
     io.sockets.emit('playerList', {players: systemManager.getPlayers()});
   });
 
