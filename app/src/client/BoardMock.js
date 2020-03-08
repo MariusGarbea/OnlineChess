@@ -48,6 +48,10 @@ function initializeBoard() {
     return board; 
 }
 
+function createStaleMate(){
+  return new chess.Chess('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');  
+}
 
 
-export { createEmptyMatrix, initializeBoard, chessObject}; 
+
+export { createEmptyMatrix, initializeBoard, chessObject, createStaleMate}; 
