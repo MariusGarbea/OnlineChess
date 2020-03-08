@@ -1,4 +1,4 @@
-import { createEmptyMatrix, initializeBoard } from './App.mock.js';
+import { createEmptyMatrix, initializeBoard, chessObject } from './App.mock.js';
 
 describe('Board.js Test Suite', () => {
   it('Board Layout Size', () => {
@@ -26,6 +26,37 @@ describe('Board.js Test Suite', () => {
      expect(board[1]).toStrictEqual(black_pawn);    
      expect(board[6]).toStrictEqual(white_pawn);    
      expect(board[7]).toStrictEqual(white_pieces);    
-    
+  }); 
+
+  it('Pawn movement (success)', () => {
+    chessObject.reset(); 
+    let actualMove = chessObject.move({from: 'e2', to: 'e3'}); 
+    expect(actualMove).toBeTruthy();
+  }); 
+
+  it('Pawn movement (failure)', () => {
+    chessObject.reset(); 
+    let actualMove = chessObject.move({from: 'e2', to: 'e7'}); 
+    expect(actualMove).toBeNull();
   })
-});
+
+  it('Pawn movement (failure)', () => {
+    chessObject.reset(); 
+    let actualMove = chessObject.move({from: 'e2', to: 'e7'}); 
+    expect(actualMove).toBeNull();
+  }); 
+
+  it('Double pawn movement (success)', () => {
+    chessObject.reset(); 
+    let actualMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    expect(actualMove).toBeTruthy();
+  }); 
+
+  it('Double pawn movement (failure)', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'e2', to: 'e4'}); 
+    let secondMove = chessObject.move({from: 'e4', to: 'e6'}); 
+    expect(secondMove).toBeNull();
+  }); 
+
+}); 
