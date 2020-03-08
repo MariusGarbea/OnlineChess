@@ -2,8 +2,8 @@
 
 ## Candidate Release Log
 
-- 1.0.0
- - Initial version with functioning game 
+### 1.0.0
+- Initial version with functioning game
 
 ## Quick Start
 
