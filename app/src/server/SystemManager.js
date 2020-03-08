@@ -122,7 +122,7 @@ class SystemManager {
     * @param {Player} p2: The second player
     */
    rejectMatch(p1, p2) {
-     
+
    }
 
    /**
