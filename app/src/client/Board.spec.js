@@ -1,4 +1,4 @@
-import { createEmptyMatrix, initializeBoard, chessObject } from './BoardMock.js';
+import { createEmptyMatrix, initializeBoard, chessObject, createStaleMate } from './BoardMock.js';
 
 describe('Board.js Test Suite', () => {
   it('Board Layout Size', () => {
@@ -168,6 +168,34 @@ describe('Board.js Test Suite', () => {
     expect(fifthMove).toBeTruthy(); 
     expect(expectedPawns_afterCapture).toStrictEqual(actualPawns_afterCapture); 
   });
+
+
+  it('Checkmate', () => {
+    chessObject.reset(); 
+    let firstMove = chessObject.move({from: 'f2', to: 'f3'}); 
+    let secondMove = chessObject.move({from: 'e7', to: 'e5'}); 
+    let thirdMove = chessObject.move({from: 'g2', to: 'g4'}); 
+    let fourthMove = chessObject.move({from: 'd8', to: 'h4'}); 
+    expect(chessObject.in_checkmate()).toBe(true); 
+  }); 
+
+  it('Stalemate', () => {
+    chessObject.reset(); 
+    let moves = [
+      'e3', 'a5', 'Qh5', 'Ra6', 'Qxa5', 'h5', 'Qxc7', 
+      'Rah6', 'h4', 'f6', 'Qxd7', 'Kf7', 'Qxb7', 'Qd3', 
+      'Qxb8', 'Qh7', 'Qxc8', 'Kg6', 'Qe6'];  
+
+      moves.forEach(move => {
+        chessObject.move(move); 
+      }); 
+    expect(chessObject.in_stalemate()).toBe(true); 
+  });
+
+
+  
+
+
 
 
 

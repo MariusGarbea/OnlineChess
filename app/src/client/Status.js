@@ -46,36 +46,6 @@ export default class Status extends Component {
               <b>{this.state.game[this.state.game.current]} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
           }
         }
-
-
-        /*
-
-        if (history.length >= 1){
-            if (((history.length-1) % 2) == 0){
-                if(check_stale){
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.w}</b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>{this.state.game.b} is in {check_or_stale}</div></div>;
-                }
-                else {
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.w} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
-                }
-                this.state.status = `→ Awaiting Move from ${this.state.game.b}`;
-            } else {
-                if(check_stale){
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.b} </b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>{this.state.game.w} is in {check_or_stale}</div></div>;
-                }
-                else {
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.b} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
-                }
-                this.state.status = `→ Awaiting Move from ${this.state.game.w}`;
-            }
-        }*/
-
         arr.push(curr_status);
         return arr;
       }
