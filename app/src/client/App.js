@@ -44,7 +44,7 @@ export default class App extends Component {
     // What to do when this socket receives a play request
     this.state.socket.on('receiveRequest', (data) => {
       let res = confirm(`Player "${data.playerName}" would like to player a game!`);
-
+      console.log(res);
       if (res) {
         this.state.socket.emit('acceptMatch', {
           'p1': self.name,
@@ -121,7 +121,7 @@ export default class App extends Component {
       .then((data) => {
         if (data == ''){
           alert('Please enter a name!');
-          this.registerUsername(); 
+          this.registerUsername();
         } else if (data['result']) {
           alert('Name successfully registered!');
           this.setState({
