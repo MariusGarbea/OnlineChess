@@ -1,0 +1,54 @@
+body {
+  text-align: center;
+  margin: auto;
+  height: 100vh;
+  background-color:	#eeeed2;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.chessboard {
+  width: 560px;
+  height: 560px;
+  margin-right: 100px;
+  border: 10px solid #333;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.black {
+  float: left;
+  width: 70px;
+  height: 70px;
+  background-color: #baca44;
+  color: #000;
+  font-size:50px;
+  text-align:center;
+  display: table-cell;
+  vertical-align:middle;
+  cursor: pointer;
+}
+
+.white {
+  float: left;
+  width: 70px;
+  height: 70px;
+  background-color: #fff;
+  color: #000;
+  font-size:50px;
+  text-align:center;
+  display: table-cell;
+  vertical-align:middle;
+  cursor: pointer;
+}
