@@ -18,7 +18,6 @@ class SystemManager {
 
   constructor() {
     this.connectedPlayers = new Set();
-    this.busyPlayers = new Set();
     this.matchTable = {};
     this.gameTable = {};
   }
@@ -33,9 +32,6 @@ class SystemManager {
       return false;
     } else {
       this.connectedPlayers.add(p);
-      if (this.matchTable[p] && !this.busyPlayers.has(p)) {
-        this.busyPlayers.add(p);
-      }
       return true;
     }
   }
@@ -46,11 +42,6 @@ class SystemManager {
    * @return {boolean} true if successful, false if name not in our list
    */
   removePlayer(p) {
-
-    if (this.busyPlayers.has(p)) {
-      this.busyPlayers.delete(p);
-    }
-
     if (this.connectedPlayers.has(p)) {
       this.connectedPlayers.delete(p);
       return true;
@@ -94,20 +85,6 @@ class SystemManager {
        return false;
      }
 
-     // Fail if p1 is busy
-     if (this.busyPlayers.has(p1)) {
-       return false;
-     }
-
-     // Fail if p2 is busy
-     if (this.busyPlayers.has(p2)) {
-       return false;
-     }
-
-     // Mark both players as busy
-     this.busyPlayers.add(p1);
-     this.busyPlayers.add(p2);
-
      return true;
    }
 
@@ -145,13 +122,7 @@ class SystemManager {
     * @param {Player} p2: The second player
     */
    rejectMatch(p1, p2) {
-     if (this.busyPlayers.has(p1)) {
-       this.busyPlayers.delete(p1);
-     }
-
-     if (this.busyPlayers.has(p2)) {
-       this.busyPlayers.delete(p2);
-     }
+     
    }
 
    /**
