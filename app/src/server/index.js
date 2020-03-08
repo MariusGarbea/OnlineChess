@@ -1,6 +1,5 @@
 // initialize needed packages
 const express = require('express');
-const os = require('os');
 const http = require('http');
 const server = http.createServer(express);
 const io = require('socket.io')(server);
@@ -28,7 +27,7 @@ io.on('connection', (socket) => {
   console.log(`New socket connected: ${socket.id}`);
 
   // Handles the binding of sockets to names and name to sockets
-  socket.on('bind', (data, callback) => {
+  socket.on('bind', (data) => {
     systemManager.addPlayer(data.name);
     nameToSocket[data.name] = socket;
     socketToName[socket.id] = data.name;
@@ -49,7 +48,7 @@ io.on('connection', (socket) => {
   });
 
   // Route for initiating a match request
-  socket.on('requestMatch', function(data, callback) {
+  socket.on('requestMatch', function(data) {
     let p2 = data.playerName;
 
     console.log(`Player "${socketToName[socket.id]}" has requested Player "${p2}" for a match.`);
@@ -63,7 +62,7 @@ io.on('connection', (socket) => {
   });
 
   // Route for accepting a match request
-  socket.on('acceptMatch', function(data, callback) {
+  socket.on('acceptMatch', function(data) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has accepted Player "${p2}"'s request.`);
@@ -80,7 +79,7 @@ io.on('connection', (socket) => {
   });
 
   // Route for rejecting a match request
-  socket.on('rejectMatch', function(data, callback) {
+  socket.on('rejectMatch', function(data) {
     let p2 = data.p2;
     let p1 = socketToName[socket.id];
     console.log(`Player "${p1}" has rejected Player "${p2}"'s request.`);
