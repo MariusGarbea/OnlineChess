@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./app.css";
+import "./status.css";
 import Chess from "chess.js";
 
 export default class Status extends Component {
@@ -46,36 +46,6 @@ export default class Status extends Component {
               <b>{this.state.game[this.state.game.current]} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
           }
         }
-
-
-        /*
-
-        if (history.length >= 1){
-            if (((history.length-1) % 2) == 0){
-                if(check_stale){
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.w}</b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>{this.state.game.b} is in {check_or_stale}</div></div>;
-                }
-                else {
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.w} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
-                }
-                this.state.status = `→ Awaiting Move from ${this.state.game.b}`;
-            } else {
-                if(check_stale){
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.b} </b> moved to {history[history.length - 1]}{status}
-                    <div className='notif'>{this.state.game.w} is in {check_or_stale}</div></div>;
-                }
-                else {
-                    curr_status = <div class='column'>
-                    <b>{this.state.game.b} </b> moved to {history[history.length - 1]}{status} {check_or_stale}</div>;
-                }
-                this.state.status = `→ Awaiting Move from ${this.state.game.w}`;
-            }
-        }*/
-
         arr.push(curr_status);
         return arr;
       }
@@ -93,15 +63,15 @@ export default class Status extends Component {
     this.state.game = this.props.game;
 
     if (this.state.game) {
-      this.state.status = `→ Awaiting Move from ${this.state.game[this.state.game.current]}`;
+      this.state.status = `Awaiting Move from ${this.state.game[this.state.game.current]}`;
     }
 
     return (
-    <div class="left">
-        <div class='title'><b>GAME STATUS</b></div>
+    <div className="left">
+        <div className='title'><b>GAME STATUS</b></div>
         <hr />
-        <p class='green'><b>{this.state.status}</b></p>
-        <div class='left_inner'>{arr.map(r => r)}</div>
+        <p className='green'><b>{this.state.status}</b></p>
+        <div>{arr.map(r => r)}</div>
       </div>);
   }
 

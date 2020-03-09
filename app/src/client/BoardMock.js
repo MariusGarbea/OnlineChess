@@ -1,3 +1,7 @@
+const chess = require('chess.js'); 
+
+let chessObject = new chess.Chess(); 
+
 function createEmptyMatrix(numrows, numcols, initial) {
   var arr = [];
   for (var i = 0; i < numrows; ++i) {
@@ -12,7 +16,7 @@ function createEmptyMatrix(numrows, numcols, initial) {
 
 function initializeBoard() {
     let board = createEmptyMatrix(8, 8, 0); 
-    
+
     // Take only the first part of the FEN representation
     // E.g: rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR
     let fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; 
@@ -42,6 +46,8 @@ function initializeBoard() {
       });
     });
     return board; 
-  }
+}
 
-export { createEmptyMatrix, initializeBoard }; 
+
+
+export { createEmptyMatrix, initializeBoard, chessObject}; 
