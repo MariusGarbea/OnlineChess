@@ -42,6 +42,53 @@ describe('systemManager team matching & play functionality', () => {
     s.addPlayer('bcd');
     expect(s.requestMatch('abc', 'bcd')).toStrictEqual(true);
   });
+  it('Rejects matches if player 1 does not exist', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('abc');
+    expect(s.requestMatch('abc', 'bcd')).toStrictEqual(false);
+  });
+  it('Rejects matches if player 1 does not exist', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('bcd');
+    expect(s.requestMatch('abc', 'bcd')).toStrictEqual(false);
+  });
+  it('Rejects matches if player 1 is in a match', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('bcd');
+    s.addPlayer('abc');
+    s.requestMatch('abc', 'bcd');
+    s.acceptMatch('abc', 'bcd');
+    s.addPlayer('efg');
+    expect(s.requestMatch('abc', 'efg')).toStrictEqual(false);
+  });
+  it('Rejects matches if player 2 is in a match', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('bcd');
+    s.addPlayer('abc');
+    s.requestMatch('abc', 'bcd');
+    s.acceptMatch('abc', 'bcd');
+    s.addPlayer('efg');
+    s.validateMove('abc', 'e4');
+    expect(s.requestMatch('efg', 'abc')).toStrictEqual(false);
+  });
+  it('Validates move properly', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('bcd');
+    s.addPlayer('abc');
+    s.requestMatch('abc', 'bcd');
+    s.acceptMatch('abc', 'bcd');
+    expect(s.validateMove('abc', 'e4').status).toStrictEqual(0);
+  });
+  it('Invalidates move properly', () => {
+    let s = new manager.SystemManager();
+    s.addPlayer('bcd');
+    s.addPlayer('abc');
+    s.requestMatch('abc', 'bcd');
+    s.acceptMatch('abc', 'bcd');
+    s.validateMove('abc', 'e4');
+    s.validateMove('bcd', 'e5');
+    expect(s.validateMove('abc', 'e4').status).toStrictEqual(1);
+  });
   it('Rejects matches correctly', () => {
     let s = new manager.SystemManager();
     s.addPlayer('abc');
