@@ -33,9 +33,6 @@ class SystemManager {
       return false;
     } else {
       this.connectedPlayers.add(p);
-      if (this.matchTable[p] && !this.busyPlayers.has(p)) {
-        this.busyPlayers.add(p);
-      }
       return true;
     }
   }
