@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./app.css";
+import "./board.css";
 import Chess from "chess.js";
 import Status from './Status';
 
@@ -110,17 +110,17 @@ export default class Board extends Component {
         let square = "";
         if (piece != 'X'){
           if ((i+j) % 2 == 0){
-            square = <span onClick={(e) => this.getMove(piece, i, j)} class="black">{img}</span>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="black">{img}</div>;
           }
           else{
-            square = <div onClick={(e) => this.getMove(piece, i, j)} class="white">{img}</div>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="white">{img}</div>;
           }
         } else {
           if ((i+j) % 2 == 0){
-            square = <div onClick={(e) => this.getMove('', i, j)} class="black"></div>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="black"></div>;
           }
           else{
-            square =  <div onClick={(e) => this.getMove('', i, j)} class="white"></div>;
+            square =  <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="white"></div>;
           }
         }
         squares.push(square);
@@ -141,13 +141,11 @@ export default class Board extends Component {
 
     this.state.squares = this.tableBoard();
     return (
-      <div>
-        <div>
-        <Status game={app.state.game} chess_object={this.state.chess} myturn={this.state.myturn} history={this.state.gameHistory} username={this.props.username}/>
-        </div>
-        <div class="chessboard">
+      <div className="container">
+        <div className="chessboard">
           {this.state.squares.map(square => square)}
         </div>
+        <Status game={app.state.game} chess_object={this.state.chess} myturn={this.state.myturn} history={this.state.gameHistory} username={this.props.username}/>
       </div>
     );
   }

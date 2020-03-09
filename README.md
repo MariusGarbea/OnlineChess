@@ -2,6 +2,13 @@
 
 ## Candidate Release Log
 
+### 1.0.1
+- Resolve issues with automatic game requests failures
+- Create new UI for registering a name
+- Create a new UI for requesting a player and accepting a game
+- Resolve issue with null name registration
+- CSS updates
+
 ### 1.0.0
 - Initial version with functioning game
 

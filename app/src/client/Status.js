@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./app.css";
+import "./status.css";
 import Chess from "chess.js";
 
 export default class Status extends Component {
@@ -63,15 +63,15 @@ export default class Status extends Component {
     this.state.game = this.props.game;
 
     if (this.state.game) {
-      this.state.status = `→ Awaiting Move from ${this.state.game[this.state.game.current]}`;
+      this.state.status = `Awaiting Move from ${this.state.game[this.state.game.current]}`;
     }
 
     return (
-    <div class="left">
-        <div class='title'><b>GAME STATUS</b></div>
+    <div className="left">
+        <div className='title'><b>GAME STATUS</b></div>
         <hr />
-        <p class='green'><b>{this.state.status}</b></p>
-        <div class='left_inner'>{arr.map(r => r)}</div>
+        <p className='green'><b>{this.state.status}</b></p>
+        <div>{arr.map(r => r)}</div>
       </div>);
   }
 
