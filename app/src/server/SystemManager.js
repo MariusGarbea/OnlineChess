@@ -142,7 +142,6 @@ class SystemManager {
        return null;
      }
 
-     // console.log(m);
      let result = this.gameTable[label].game.move(m);
      if (result) {
        this.gameTable[label].status = moveStatus.OK;

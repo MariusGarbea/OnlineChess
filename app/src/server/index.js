@@ -74,8 +74,9 @@ io.on('connection', (socket) => {
     nameToSocket[p2].emit('accepted', {'playerName': p1});
 
     // Update both players with game state
-    nameToSocket[p2].emit('update', game);
-    socket.emit('update', game);
+    let rsp = {'player': null, 'move': null, 'result': game}
+    nameToSocket[p2].emit('update', rsp);
+    socket.emit('update', rsp);
   });
 
   // Route for rejecting a match request
@@ -103,11 +104,13 @@ io.on('connection', (socket) => {
     let move = data;
     let player = socketToName[socket.id];
     let result = systemManager.validateMove(player, move);
+    console.log(result)
     if (result) {
       let b = result['b'];
       let w = result['w'];
-      nameToSocket[b].emit('update', result);
-      nameToSocket[w].emit('update', result);
+      let rsp = {player, move, result}
+      nameToSocket[b].emit('update', rsp);
+      nameToSocket[w].emit('update', rsp);
     }
   });
 });

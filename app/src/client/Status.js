@@ -19,7 +19,6 @@ export default class Status extends Component {
       this.state.chess = chess;
       this.state.game = this.props.game;
 
-      console.log(this.props.history)
       if (this.state.game) {
         this.state.status = `Awaiting Move from ${this.state.game[this.state.game.current]}`;
       }
@@ -42,14 +41,13 @@ export default class Status extends Component {
             check_stale = true;
         }
       }
-
       return (
         <div className="left">
           <div className='title'><b>GAME STATUS</b></div>
           <hr/>
           <p className='green'><b>{this.state.status}</b></p>
           <div className='left-inner'>
-            {this.props.history.map((x, idx) => <div className='column' key={idx}><b>{x.player}</b> moved from {x.move.from} to {x.move.to}</div>)}
+            {this.props.history.map((x, idx) => x.player != null ? <div className='column' key={idx}><b>{x.player}</b> moved from {x.move.from} to {x.move.to}</div> : null)}
           </div>
           {check_stale ? <div className='notif'><b>{this.state.game[this.state.game.current]}</b> is in {check_or_stale}</div> : null}
         </div>
