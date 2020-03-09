@@ -110,4 +110,31 @@ export default class App extends Component {
         </div>
       </Router>
   );}
+
+  /**
+  Function to force a user to register their username
+  */
+  registerUsername() {
+    let name = prompt('Enter a username: ');
+    fetch(`/api/registerUsername?name=${name}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (name){
+          alert('Please enter a name!');
+          this.registerUsername();
+        } else if (data['result']) {
+          alert('Name successfully registered!');
+          this.setState({
+            username: name
+          });
+          this.state.socket.emit('bind', {name: this.state.username});
+        } else {
+          alert('Name is already taken :( Try again');
+          this.registerUsername();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
