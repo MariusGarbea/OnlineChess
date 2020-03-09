@@ -58,6 +58,22 @@ npx eslint src/
 within the app directory and the tool will produce a report about errors
 it finds.
 
+## Running Jest (Unit Testing & Code Coverage Analysis Tool)
+
+This project is using [Jest](https://jestjs.io/) to do unit testing, and to give code coverage reports.
+
+Make sure that you install it (should be installed while you're installing dependencies).
+
+The test files are in the `SystemManager.spec.js` file (responsible for the backend testing), and
+`Board.spec.js` file (responsible for the front end).
+
+To run the tests and the code coverage report, run in the app folder :
+
+```bash
+yarn jest --coverage
+```
+
+
 ## Documentation
 
 ### Board
