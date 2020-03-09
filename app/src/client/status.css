@@ -1,29 +1,28 @@
-hr{
-  color: #BDC3C7 ;
+hr {
+  margin-left: 0;
+  margin-right: 0;
+  color: #BDC3C7;
 }
 
-.green{
+.green {
   color: #769656;
   padding-left: 20px;
 }
 
-.left{
+.left {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
+  overflow-y: scroll;
   border: 10px solid #333;
   background-color: white;
   width: 280px;
-  height: 560px;
+  height: 580px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   padding: 1%;
 }
 
-.left_inner{
-  overflow-y: scroll;
-  position: absolute;
-  height: 180px;
-}
-
-.title{
+.title {
   color: #333;
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
@@ -34,7 +33,7 @@ hr{
   font-family: 'Roboto';
 }
 
-.notif{
+.notif {
   padding-top: 10px;
   color: #ff7f7f;
   font-family: 'Roboto';

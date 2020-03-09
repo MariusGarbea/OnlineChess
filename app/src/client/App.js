@@ -25,6 +25,7 @@ export default class App extends Component {
       game: null,
       socket: io('http://localhost:3200'),
       myturn: false,
+      history: [],
       requests: []
     };
   }
@@ -60,13 +61,18 @@ export default class App extends Component {
     // Receives game updates
     this.state.socket.on('update', (data) => {
       this.setState({gameAccepted: true});
-      let w = data.w;
-      let b = data.b;
+      let w = data.result.w;
+      let b = data.result.b;
       let me = w == this.state.username ? 'w' : 'b';
       this.setState({
-        myturn: me == data.current,
-        game: data
+        myturn: me == data.result.current,
+        game: data.result,
       });
+      if (data.move) {
+        this.setState({
+          history: this.state.history.concat({'player': data.player, 'move': data.move})
+        });
+      }
     });
 
     this.state.socket.on('updateName', (data) => {
@@ -98,7 +104,7 @@ export default class App extends Component {
               }
             </Route>
             <Route path="/game">
-              <Board app={this} socket={this.state.socket} game={this.state.game} username={this.state.username}/>
+              <Board app={this} socket={this.state.socket} game={this.state.game} username={this.state.username} gameHistory={this.state.history}/>
             </Route>
           </Switch>
         </div>
