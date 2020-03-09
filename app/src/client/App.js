@@ -16,7 +16,6 @@ export default class App extends Component {
 
   constructor() {
     super();
-
     // Set the inital state of the system
     this.state = {
       username: '',
@@ -26,6 +25,7 @@ export default class App extends Component {
       socket: io('http://localhost:3200'),
       myturn: false,
       history: [],
+      previousPlayer: '',
       requests: []
     };
   }
@@ -66,13 +66,14 @@ export default class App extends Component {
       let me = w == this.state.username ? 'w' : 'b';
       this.setState({
         myturn: me == data.result.current,
-        game: data.result,
+        game: data.result
       });
-      if (data.move) {
+      if (data.result && data.result.current != this.state.previousPlayer) {
         this.setState({
-          history: this.state.history.concat({'player': data.player, 'move': data.move})
+          history: this.state.history.concat({'player': data.player, 'move': data.move}),
         });
       }
+      this.setState({previousPlayer: data.result.current});
     });
 
     this.state.socket.on('updateName', (data) => {

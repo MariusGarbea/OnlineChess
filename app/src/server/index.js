@@ -104,6 +104,7 @@ io.on('connection', (socket) => {
     let move = data;
     let player = socketToName[socket.id];
     let result = systemManager.validateMove(player, move);
+    console.log(result)
     if (result) {
       let b = result['b'];
       let w = result['w'];

@@ -70,6 +70,10 @@ export default class Board extends Component {
     });
   }
 
+  isSameCase(s1, s2) {
+    return ((s1 == s2.toLowerCase() && s1.toLowerCase() == s2) || (s1 == s2.toUpperCase() && s1.toUpperCase() == s2));
+  }
+
   /**
    * This function allows move a piece from one square to another
    * @param {string} piece: name of the piece that moves
@@ -81,11 +85,15 @@ export default class Board extends Component {
       let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
       let row = ['8', '7', '6', '5', '4', '3', '2', '1'];
       let move = col[j] + row[i];
+
       this.state.history.push(move);
+  
       if (this.state.history.length == 2) {
         let move1 = this.state.history[0];
         let move2 = this.state.history[1];
+
         this.state.socket.emit('move', {from: move1, to: move2});
+
         this.setState({
           history: []
         });
