@@ -23,13 +23,17 @@ export default class App extends Component {
       players: [],
       gameAccepted: false,
       game: null,
-      socket: io('http://localhost:3200'),
-      myturn: false,
-      requests: []
+      socket: null,
+      myturn: false
     };
+
+    this.registerUsername();
   }
 
   handleSocketConnection() {
+     // Connects app to sockets on the backend
+    this.state.socket = io('http://localhost:3200');
+
     // What to do when this socket connects
     this.state.socket.on('connect', () => {
       if (this.state.username) {
@@ -39,11 +43,20 @@ export default class App extends Component {
 
     // What to do when this socket receives a play request
     this.state.socket.on('receiveRequest', (data) => {
-      let rs = this.state.requests;
-      rs.push(data.playerName);
-      this.setState({
-        requests: rs
-      });
+      let res = confirm(`Player "${data.playerName}" would like to player a game!`);
+      console.log(res);
+      if (res) {
+        this.state.socket.emit('acceptMatch', {
+          'p1': self.name,
+          'p2': data.playerName
+        });
+        this.setState({gameAccepted: true});
+      } else {
+        this.state.socket.emit('rejectMatch', {
+          'p1': self.name,
+          'p2': data.playerName
+        });
+      }
     });
 
     // Alerts the player that their match was rejected
@@ -59,19 +72,12 @@ export default class App extends Component {
 
     // Receives game updates
     this.state.socket.on('update', (data) => {
-      this.setState({gameAccepted: true});
       let w = data.w;
       let b = data.b;
       let me = w == this.state.username ? 'w' : 'b';
       this.setState({
         myturn: me == data.current,
         game: data
-      });
-    });
-
-    this.state.socket.on('updateName', (data) => {
-      this.setState({
-        username: data.name
       });
     });
 
@@ -94,7 +100,7 @@ export default class App extends Component {
             <Route exact path="/">
               {this.state.gameAccepted ?
                 <Redirect to="/game" />:
-                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket} requests={this.state.requests}/>
+                <Menu name={this.state.username} players={this.state.players} socket={this.state.socket}/>
               }
             </Route>
             <Route path="/game">
@@ -104,4 +110,31 @@ export default class App extends Component {
         </div>
       </Router>
   );}
+
+  /**
+  Function to force a user to register their username
+  */
+  registerUsername() {
+    let name = prompt('Enter a username: ');
+    fetch(`/api/registerUsername?name=${name}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (name){
+          alert('Please enter a name!');
+          this.registerUsername();
+        } else if (data['result']) {
+          alert('Name successfully registered!');
+          this.setState({
+            username: name
+          });
+          this.state.socket.emit('bind', {name: this.state.username});
+        } else {
+          alert('Name is already taken :( Try again');
+          this.registerUsername();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
