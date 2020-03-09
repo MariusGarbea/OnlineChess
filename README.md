@@ -17,7 +17,7 @@
 ```bash
 
 # Go inside the directory
-cd simple-react-full-stack
+cd online-chess
 
 # Install dependencies
 yarn (or npm install)
