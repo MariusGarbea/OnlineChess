@@ -42,6 +42,7 @@ export default class Menu extends Component {
       <div id="bck">
         <h2 id="title"> Online Chess </h2>
         <p> Welcome!</p>
+        <p> Current Version of the Game : v1.0.1 (<a href="https://github.com/MariusGarbea/OnlineChess/blob/master/README.md">Changelog</a>) </p>
         <label>Name: </label>
         <input type="text" id="name" name="name" />
         <input type="submit" onClick={() => this.registerUsername()} />

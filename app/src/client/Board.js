@@ -13,7 +13,8 @@ export default class Board extends Component {
       history: [],
       socket: props.socket,
       gameHistory: null,
-      chess: null
+      chess: null,
+      isBlack: false
     };
   }
 
@@ -110,17 +111,17 @@ export default class Board extends Component {
         let square = "";
         if (piece != 'X'){
           if ((i+j) % 2 == 0){
-            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="black">{img}</div>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="black" style={{transform: this.state.isBlack ? 'rotate(180deg)' : 'rotate(0deg)'}}>{img}</div>;
           }
           else{
-            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="white">{img}</div>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="white" style={{transform: this.state.isBlack ? 'rotate(180deg)' : 'rotate(0deg)'}}>{img}</div>;
           }
         } else {
           if ((i+j) % 2 == 0){
-            square = <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="black"></div>;
+            square = <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="black" style={{transform: this.state.isBlack ? 'rotate(180deg)' : 'rotate(0deg)'}}></div>;
           }
           else{
-            square =  <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="white"></div>;
+            square =  <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="white" style={{transform: this.state.isBlack ? 'rotate(180deg)' : 'rotate(0deg)'}}></div>;
           }
         }
         squares.push(square);
@@ -132,17 +133,24 @@ export default class Board extends Component {
   render() {
     const app = this.props.app;
 
+    console.log(app);
+
     if (app.state.game) {
       this.initializeBoard(app.state.game.fen);
       this.state.myturn = app.state.myturn;
       this.state.chess = new Chess(app.state.game.fen);
       this.state.gameHistory = app.state.game.history;
+      this.state.isBlack = (this.props.username == app.state.game["b"])
     }
+
+    console.log(app.state);
+
+    console.log(this.state);
 
     this.state.squares = this.tableBoard();
     return (
       <div className="container">
-        <div className="chessboard">
+        <div className="chessboard" style={{transform: this.state.isBlack ? 'rotate(180deg)' : 'rotate(0deg)'}}>
           {this.state.squares.map(square => square)}
         </div>
         <Status game={app.state.game} chess_object={this.state.chess} myturn={this.state.myturn} history={this.state.gameHistory} username={this.props.username}/>
