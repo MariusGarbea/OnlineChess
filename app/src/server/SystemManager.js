@@ -44,6 +44,9 @@ class SystemManager {
   removePlayer(p) {
     if (this.connectedPlayers.has(p)) {
       this.connectedPlayers.delete(p);
+      delete this.gameTable[[p, this.matchTable[p]]];
+      delete this.gameTable[[this.matchTable[p], p]];
+      delete this.matchTable[p];
       return true;
     } else {
       return false;

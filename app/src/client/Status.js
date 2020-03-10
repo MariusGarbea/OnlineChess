@@ -39,7 +39,7 @@ export default class Status extends Component {
           if(check_stale){
               curr_status = <div class='column'>
               <b>{this.state.game[this.state.game.current]} </b> moved to {history[history.length - 1]}{status}
-              <div className='notif'>{this.state.game[this.state.game.current]} is in {check_or_stale}</div></div>;
+              <div className='notif'>{this.state.game[this.state.game.current]} is in {check_or_stale}</div>{chess_game.in_checkmate() && <div><p>Player {this.state.game[this.state.game.current == "w" ? "b" : "w"]} won!</p><a className="newmatch" href="/">Play Again</a> </div>}</div>;
           }
           else {
               curr_status = <div class='column'>
