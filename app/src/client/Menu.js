@@ -40,7 +40,8 @@ export default class Menu extends Component {
     let requestList = this.props.requests.filter(p => p != this.props.name && this.props.name).map(p => <li key={p} onClick={() => this.acceptRequest(p)}>{p}</li>);
     return (
       <div id="bck">
-        <h2 id="title"> Online Chess </h2>
+        <h2 id="title"> Online Chess <br/><small>v1.0.1</small></h2>
+        <h3 id="version"></h3>
         <p> Welcome!</p>
         <label>Name: </label>
         <input type="text" id="name" name="name" />
