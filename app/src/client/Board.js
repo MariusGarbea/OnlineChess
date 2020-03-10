@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./board.css";
 import Chess from "chess.js";
 import Status from './Status';
+import classNames from 'classnames'
 
 export default class Board extends Component {
   constructor(props) {
@@ -12,7 +13,8 @@ export default class Board extends Component {
       myturn: false,
       history: [],
       socket: props.socket,
-      chess: null
+      chess: null,
+      b: null
     };
   }
 
@@ -87,7 +89,7 @@ export default class Board extends Component {
       let move = col[j] + row[i];
 
       this.state.history.push(move);
-  
+
       if (this.state.history.length == 2) {
         let move1 = this.state.history[0];
         let move2 = this.state.history[1];
@@ -117,17 +119,21 @@ export default class Board extends Component {
         let square = "";
         if (piece != 'X'){
           if ((i+j) % 2 == 0){
-            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="black">{img}</div>;
+            let cls = classNames('black', {'rotate': this.state.chess && this.props.username === this.state.b});
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className={cls}>{img}</div>;
           }
           else{
-            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className="white">{img}</div>;
+            let cls = classNames('white', {'rotate': this.state.chess && this.props.username === this.state.b});
+            square = <div key={i+""+j} onClick={(e) => this.getMove(piece, i, j)} className={cls}>{img}</div>;
           }
         } else {
           if ((i+j) % 2 == 0){
-            square = <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="black"></div>;
+            let cls = classNames('black', {'rotate': this.state.chess && this.props.username === this.state.b});
+            square = <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className={cls}></div>;
           }
           else{
-            square =  <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className="white"></div>;
+            let cls = classNames('white', {'rotate': this.state.chess && this.props.username === this.state.b});
+            square =  <div key={i+""+j} onClick={(e) => this.getMove('', i, j)} className={cls}></div>;
           }
         }
         squares.push(square);
@@ -143,12 +149,14 @@ export default class Board extends Component {
       this.initializeBoard(app.state.game.fen);
       this.state.myturn = app.state.myturn;
       this.state.chess = new Chess(app.state.game.fen);
+      this.state.b = app.state.game.b;
     }
 
     this.state.squares = this.tableBoard();
+    let boardClasses = classNames('chessboard', {'rotate': app.state.game && this.props.username === app.state.game.b});
     return (
       <div className="container">
-        <div className="chessboard">
+        <div className={boardClasses}>
           {this.state.squares.map(square => square)}
         </div>
         <Status game={app.state.game} chess_object={this.state.chess} myturn={this.state.myturn} history={this.props.gameHistory} username={this.props.username}/>
