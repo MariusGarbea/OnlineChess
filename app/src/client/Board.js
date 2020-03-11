@@ -11,10 +11,11 @@ export default class Board extends Component {
       board: this.createEmptyMatrix(8, 8, "X"),
       myturn: false,
       history: [],
+      pieces: [], 
       socket: props.socket,
       gameHistory: null,
       chess: null,
-      isBlack: false
+      isBlack: false, 
     };
   }
 
@@ -72,6 +73,15 @@ export default class Board extends Component {
     });
   }
 
+  // Pawn default promotion to a queen 
+  doPromotion(move1, move2, color, index){
+    this.state.socket.emit('move', {
+      color: color, 
+      from: move1, 
+      to: move2, 
+      column: index});   
+  }
+
   /**
    * This function allows move a piece from one square to another
    * @param {string} piece: name of the piece that moves
@@ -79,17 +89,28 @@ export default class Board extends Component {
    * @param {*} j the column number
    */
   getMove(piece, i, j) {
+    console.log(piece, i, j); 
     if (this.state.myturn) {
       let col = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
       let row = ['8', '7', '6', '5', '4', '3', '2', '1'];
       let move = col[j] + row[i];
       this.state.history.push(move);
+      this.state.pieces.push(piece); 
+
       if (this.state.history.length == 2) {
         let move1 = this.state.history[0];
         let move2 = this.state.history[1];
-        this.state.socket.emit('move', {from: move1, to: move2});
+        let piece1 = this.state.pieces[0]; 
+        if (piece1 == 'P' && i == 0){
+          this.doPromotion(move1, move2, 'w', col.indexOf(move1[0])); 
+        } else if (piece1 == 'p' && i == 7){
+          this.doPromotion(move1, move2, 'b', col.indexOf(move1[0])); 
+        } else {
+          this.state.socket.emit('move', {from: move1, to: move2}); 
+        }
         this.setState({
-          history: []
+          history: [], 
+          pieces: [], 
         });
       }
     }
@@ -132,8 +153,6 @@ export default class Board extends Component {
 
   render() {
     const app = this.props.app;
-
-    console.log(app);
 
     if (app.state.game) {
       this.initializeBoard(app.state.game.fen);

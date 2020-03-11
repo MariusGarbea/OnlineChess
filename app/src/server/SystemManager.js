@@ -128,6 +128,58 @@ class SystemManager {
 
    }
 
+
+   /**
+    * Do pawn promotion here
+    * @param {Move} m: The move that is being attempted
+    */
+   handlePromotion(game, m){
+    let fen = game.fen(); 
+    let whitespace = fen.substr(0, fen.indexOf(" "));
+    let rest_of_fen = fen.substr(fen.indexOf(" "), fen.length-1); 
+    let rows = whitespace.split("/").slice(0, 8); 
+    let index = (m['color'] == 'w') ? 1 : 6; 
+    console.log(rest_of_fen); 
+
+    // Parse string to array here to remove the pawn 
+    let old_row = rows[index]; 
+    let old_row_str = ""; 
+    for (let i = 0; i < old_row.length; i++) {
+      if (isNaN(old_row[i])) {
+        old_row_str+= old_row[i];
+      } else {
+        let empty = "X".repeat(parseInt(old_row[i]));
+        old_row_str += empty;
+      }
+    } 
+    let k = parseInt(m['column']); 
+    console.log("Column of pawn", k); 
+    let new_row = old_row_str.substring(0, k) + 'X' + old_row_str.substring(k + 1); 
+    console.log('NEW ROW!!!!!!', old_row_str); 
+    console.log('NEW ROW!!!!!!', new_row); 
+
+
+    // Reconvert array to FEN string notation 
+    let count = 0; 
+    let new_row_string = ""; 
+    for (let i = 0; i < new_row.length; i++){
+      if (new_row[i] == 'X'){
+        count +=1; 
+      } else {
+        if (count > 0){
+          new_row_string += count.toString(); 
+        }
+        count = 0; 
+        new_row_string += new_row[i]; 
+      }
+    }
+    
+    console.log("NEW_ROW_STRING", new_row_string); 
+    rows[index] = new_row_string; 
+    fen = rows.join("/") + rest_of_fen; 
+    return fen; 
+   }
+
    /**
     Validates whether a move is possible
     * @param {Player} p: The player attempting to move
@@ -145,20 +197,40 @@ class SystemManager {
        return null;
      }
 
-     // console.log(m);
-     let result = this.gameTable[label].game.move(m);
-     if (result) {
-       this.gameTable[label].status = moveStatus.OK;
-       this.gameTable[label].fen = this.gameTable[label].game.fen();
-       this.gameTable[label].history = this.gameTable[label].game.history();
-       if (this.gameTable[label].current == 'w')
-          this.gameTable[label].current = 'b';
-       else
-          this.gameTable[label].current = 'w';
-     } else {
-       this.gameTable[label].status = moveStatus.INFEASIBLE;
+     let result = "";
+     let fen = ""; 
+     if (m['color'] == 'w' || m['color'] == 'b'){
+      result = this.gameTable[label].game.put({ type: 'q', color: m['color']}, m['to']);  
+      fen = this.handlePromotion(this.gameTable[label].game, m); 
+    } else {
+       result = this.gameTable[label].game.move(m);
+       fen =  this.gameTable[label].game.fen(); 
      }
-
+    
+     // If pawn promotion is valid or a move is valid, update the game 
+     if (result) {
+        this.gameTable[label].status = moveStatus.OK;
+        if (this.gameTable[label].current == 'w')
+          this.gameTable[label].current = 'b';
+        else
+          this.gameTable[label].current = 'w';
+      } else {
+        this.gameTable[label].status = moveStatus.INFEASIBLE;
+      }
+      this.gameTable[label].fen = fen;
+      this.gameTable[label].history = this.gameTable[label].game.history(); 
+    
+    //  if (result) {
+    //    this.gameTable[label].status = moveStatus.OK;
+    //    this.gameTable[label].fen = fen;
+    //    this.gameTable[label].history = this.gameTable[label].game.history();
+    //    if (this.gameTable[label].current == 'w')
+    //       this.gameTable[label].current = 'b';
+    //    else
+    //       this.gameTable[label].current = 'w';
+    //  } else {
+    //    this.gameTable[label].status = moveStatus.INFEASIBLE;
+    //  }
      return this.gameTable[label];
    }
 }
