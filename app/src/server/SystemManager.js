@@ -139,7 +139,6 @@ class SystemManager {
     let rest_of_fen = fen.substr(fen.indexOf(" "), fen.length-1); 
     let rows = whitespace.split("/").slice(0, 8); 
     let index = (m['color'] == 'w') ? 1 : 6; 
-    console.log(rest_of_fen); 
 
     // Parse string to array here to remove the pawn 
     let old_row = rows[index]; 
@@ -153,11 +152,7 @@ class SystemManager {
       }
     } 
     let k = parseInt(m['column']); 
-    console.log("Column of pawn", k); 
     let new_row = old_row_str.substring(0, k) + 'X' + old_row_str.substring(k + 1); 
-    console.log('NEW ROW!!!!!!', old_row_str); 
-    console.log('NEW ROW!!!!!!', new_row); 
-
 
     // Reconvert array to FEN string notation 
     let count = 0; 
@@ -174,7 +169,6 @@ class SystemManager {
       }
     }
     
-    console.log("NEW_ROW_STRING", new_row_string); 
     rows[index] = new_row_string; 
     fen = rows.join("/") + rest_of_fen; 
     return fen; 
